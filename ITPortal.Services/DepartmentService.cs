@@ -2,6 +2,7 @@
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.Common;
 using ITPortal.Entities.DTOs.DepartmentDTOs;
+using ITPortal.Entities.Model;
 using ITPortal.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,20 @@ namespace ITPortal.Services
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
+        }
+
+        public async Task<DepartmentMiniDTO> CreateDepartmentAsync(CreateDepartmentDTO createDepartmentDTO)
+        {
+            var mappedDepartment = _mapper.Map<Department>(createDepartmentDTO);
+            mappedDepartment.CreatedAt = DateTime.UtcNow;
+            await _departmentRepository.AddAsync(mappedDepartment);
+            await _departmentRepository.SaveChangesAsync();
+            return _mapper.Map<DepartmentMiniDTO>(mappedDepartment);
+        }
+
+        public async Task<List<DepartmentLookUpDTO>> GetDepartmentLookUpAsync(string? search, int take)
+        {
+            return await _departmentRepository.GetDepartmentLookUpAsync(search, take);
         }
 
         public async Task<PagedResultDTO<DepartmentMiniDTO>> GetDepartmentsWithPaginationAsync(int pageNumber, int pageSize)

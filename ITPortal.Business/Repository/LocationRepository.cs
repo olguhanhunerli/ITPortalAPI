@@ -2,6 +2,8 @@
 using ITPortal.Business.Repository.GenericRepository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.Common;
+using ITPortal.Entities.DTOs.DepartmentDTOs;
+using ITPortal.Entities.DTOs.LocationDTOs;
 using ITPortal.Entities.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,24 @@ namespace ITPortal.Business.Repository
     {
         public LocationRepository(AppDbContext context, IHttpContextAccessor http) : base(context, http)
         {
+        }
+
+        public async Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take)
+        {
+            if (take <= 0) take = 50;
+            if (take > 200) take = 200;
+            var query = _set.AsNoTracking();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+                query = query.Where(d => d.Name.Contains(search));
+            }
+
+            return await query.OrderBy(d => d.Name).Take(take).Select(d => new LocationLookUpDTO
+            {
+                Id = d.Id,
+                Name = d.Name
+            }).ToListAsync();
         }
 
         public async Task<PagedResultDTO<Location>> GetLocationsWithPaginationAsync(int pageNumber, int pageSize)

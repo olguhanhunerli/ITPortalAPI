@@ -1,4 +1,5 @@
-﻿using ITPortal.Services.Interfaces;
+﻿using ITPortal.Entities.DTOs.DepartmentDTOs;
+using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,22 @@ namespace ITPortal.Presentation.Controllers
             _services = services;
         }
         [HttpGet]
-        public async Task<IActionResult> GetallDepartments(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetallDepartments(int pageNumber = 1, int pageSize = 10)
         {
             var departments = await _services.GetDepartmentsWithPaginationAsync(pageNumber, pageSize);
             return Ok(departments);
+        }
+        [HttpGet("lookup")]
+        public async Task<IActionResult> GetDepartmentLookup(string? search, int take = 50)
+        {
+            var departmentLookUp = await _services.GetDepartmentLookUpAsync(search, take);
+            return Ok(departmentLookUp);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateDepartment(CreateDepartmentDTO createDepartmentDTO)
+        {
+            var createdDepartment = await _services.CreateDepartmentAsync(createDepartmentDTO);
+            return Ok(createdDepartment);
         }
     }
 }

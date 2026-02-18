@@ -2,6 +2,7 @@
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.Common;
 using ITPortal.Entities.DTOs.LocationDTOs;
+using ITPortal.Entities.Model;
 using ITPortal.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,20 @@ namespace ITPortal.Services
         {
             _locationRepository = locationRepository;
             _mapper = mapper;
+        }
+
+        public async Task<LocationMiniDTO> CreateLocationAsync(CreateLocationDTO dto)
+        {
+            var locationEntity = _mapper.Map<Location>(dto);
+            locationEntity.CreatedAt = DateTime.UtcNow;
+            await _locationRepository.AddAsync(locationEntity);
+            await _locationRepository.SaveChangesAsync();
+            return _mapper.Map<LocationMiniDTO>(locationEntity);
+        }
+
+        public async Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take)
+        {
+            return await _locationRepository.GetLocationLookUpAsync(search, take);
         }
 
         public async Task<PagedResultDTO<LocationMiniDTO>> GetLocationsWithPaginationAsync(int pageNumber, int pageSize)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.Common;
+using ITPortal.Entities.DTOs.TeamDTOs;
 using ITPortal.Entities.Model;
 using ITPortal.Services.Interfaces;
 using System;
@@ -20,6 +21,20 @@ namespace ITPortal.Services
         {
             _teamRepository = teamRepository;
             _mapper = mapper;
+        }
+
+        public async Task<TeamMiniDTO> CreateTeamAsync(CreateTeamDTO dto)
+        {
+            var teamEntity = _mapper.Map<Team>(dto);
+            teamEntity.CreatedAt = DateTime.UtcNow;
+            await _teamRepository.AddAsync(teamEntity);
+            await _teamRepository.SaveChangesAsync();
+            return _mapper.Map<TeamMiniDTO>(teamEntity);
+        }
+
+        public async Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take)
+        {
+            return await _teamRepository.GetTeamLookUpAsync(search, take);
         }
 
         public async Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize)

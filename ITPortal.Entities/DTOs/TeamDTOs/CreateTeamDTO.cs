@@ -8,7 +8,6 @@ namespace ITPortal.Entities.DTOs.TeamDTOs
 {
     public class CreateTeamDTO
     {
-        public ulong Id { get; set; }
         public string Name { get; set; } = default!;
         public ulong? DepartmentId { get; set; }
     }

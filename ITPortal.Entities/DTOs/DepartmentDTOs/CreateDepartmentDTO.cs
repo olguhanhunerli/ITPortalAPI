@@ -8,7 +8,6 @@ namespace ITPortal.Entities.DTOs.DepartmentDTOs
 {
     public class CreateDepartmentDTO
     {
-        public ulong Id { get; set; }
         public string Name { get; set; } = default!;
     }
 }

@@ -1,4 +1,5 @@
-﻿using ITPortal.Services.Interfaces;
+﻿using ITPortal.Entities.DTOs.LocationDTOs;
+using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,18 @@ namespace ITPortal.Presentation.Controllers
         {
             var locations = await _services.GetLocationsWithPaginationAsync(pageNumber, pageSize);
             return Ok(locations);
+        }
+        [HttpGet("lookup")]
+        public async Task<IActionResult> GetLocationLookup(string? search, int take = 50)
+        {
+            var locationLookUp = await _services.GetLocationLookUpAsync(search, take);
+            return Ok(locationLookUp);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateLocation([FromBody] CreateLocationDTO locationDto)
+        {
+            var createdLocation = await _services.CreateLocationAsync(locationDto);
+            return Ok(createdLocation);
         }
     }
 }
