@@ -20,7 +20,7 @@ namespace ITPortal.Presentation.Controllers
             _services = services;
         }
         [HttpGet]
-        public async Task<IActionResult> GetallLocations(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetallLocations(int pageNumber = 1, int pageSize = 10)
         {
             var locations = await _services.GetLocationsWithPaginationAsync(pageNumber, pageSize);
             return Ok(locations);
@@ -37,5 +37,28 @@ namespace ITPortal.Presentation.Controllers
             var createdLocation = await _services.CreateLocationAsync(locationDto);
             return Ok(createdLocation);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetLocationById(ulong id)
+        {
+            var location = await _services.GetLocationByIdAsync(id);
+            if (location == null)
+                return NotFound();
+            return Ok(location);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLocation(ulong id, [FromBody] UpdateLocationDTO locationDto)
+        {
+            var updatedLocation = await _services.UpdateLocationAsync(id, locationDto);
+            return Ok(updatedLocation);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLocation(ulong id)
+        {
+            var result = await _services.DeleteLocationAsync(id);
+            if (!result)
+                return NotFound();
+            return NoContent();
+        }
+
     }
 }

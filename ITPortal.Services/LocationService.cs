@@ -32,6 +32,25 @@ namespace ITPortal.Services
             return _mapper.Map<LocationMiniDTO>(locationEntity);
         }
 
+        public async Task<bool> DeleteLocationAsync(ulong id)
+        {
+            var locationEntity = await _locationRepository.GetByIdAsync(id);
+            if (locationEntity == null) 
+            {
+                return false;
+            }
+            _locationRepository.Remove(locationEntity);
+            await _locationRepository.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<LocationDTO> GetLocationByIdAsync(ulong id)
+        {
+            var locationEntity = await _locationRepository.GetByIdAsync(id);
+            return _mapper.Map<LocationDTO>(locationEntity);
+        }
+
         public async Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take)
         {
             return await _locationRepository.GetLocationLookUpAsync(search, take);
@@ -49,6 +68,19 @@ namespace ITPortal.Services
                 PageSize = pagedLocations.PageSize,
                 Items = mappedLocations
             };
+        }
+
+        public async Task<LocationMiniDTO> UpdateLocationAsync(ulong id ,UpdateLocationDTO dto)
+        {
+            var locationEntity = await _locationRepository.GetByIdAsync(id);
+
+            if (locationEntity == null)
+            {
+                return null;
+            }
+            _locationRepository.Update(locationEntity);
+            await _locationRepository.SaveChangesAsync();
+            return _mapper.Map<LocationMiniDTO>(locationEntity);
         }
     }
 }

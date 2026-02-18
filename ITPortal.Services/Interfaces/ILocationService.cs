@@ -15,6 +15,9 @@ namespace ITPortal.Services.Interfaces
         Task<PagedResultDTO<LocationMiniDTO>> GetLocationsWithPaginationAsync(int pageNumber, int pageSize);
         Task<LocationMiniDTO> CreateLocationAsync(CreateLocationDTO dto);
         Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take);
+        Task<LocationDTO> GetLocationByIdAsync(ulong id);
+        Task<bool> DeleteLocationAsync(ulong id);
+        Task<LocationMiniDTO> UpdateLocationAsync(ulong id, UpdateLocationDTO dto);
 
     }
 }

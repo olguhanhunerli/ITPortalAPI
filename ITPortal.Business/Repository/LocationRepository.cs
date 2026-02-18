@@ -21,6 +21,13 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public Task<Location> GetLocationByIdAsync(ulong id)
+        {
+            return _set
+                .AsNoTracking()
+                .FirstOrDefaultAsync(l => l.Id == id);
+        }
+
         public async Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take)
         {
             if (take <= 0) take = 50;

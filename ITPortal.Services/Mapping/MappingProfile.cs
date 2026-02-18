@@ -40,6 +40,8 @@ namespace ITPortal.Services.Mapping
                  .ForMember(dest => dest.UserCount, opt => opt.MapFrom(src => src.Users.Count)); ;
             CreateMap<CreateLocationDTO, Location>();
             CreateMap<UpdateLocationDTO, Location>();
+            CreateMap<Location, LocationDTO>();
+            CreateMap<LocationDTO, Location>();
         }
     }
 }
