@@ -32,6 +32,25 @@ namespace ITPortal.Services
             return _mapper.Map<DepartmentMiniDTO>(mappedDepartment);
         }
 
+        public async Task<bool> DeleteDepartmentAsync(ulong id)
+        {
+            var department = await _departmentRepository.GetDepartmentByIdAsync(id);
+            if (department == null)
+                throw new KeyNotFoundException($"Department not found. Id: {id}");
+            _departmentRepository.Remove(department);
+            await _departmentRepository.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<DepartmentDTO> GetDepartmentByIdAsync(ulong id)
+        {
+            var department = await _departmentRepository.GetDepartmentByIdAsync(id);
+            if (department == null)
+                throw new KeyNotFoundException($"Department not found. Id: {id}");
+            return _mapper.Map<DepartmentDTO>(department);
+        }
+
         public async Task<List<DepartmentLookUpDTO>> GetDepartmentLookUpAsync(string? search, int take)
         {
             return await _departmentRepository.GetDepartmentLookUpAsync(search, take);

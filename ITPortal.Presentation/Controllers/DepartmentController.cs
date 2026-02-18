@@ -31,7 +31,15 @@ namespace ITPortal.Presentation.Controllers
             var departmentLookUp = await _services.GetDepartmentLookUpAsync(search, take);
             return Ok(departmentLookUp);
         }
-        [HttpPut("{id}")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDepartmentById(ulong id)
+        {
+            var department = await _services.GetDepartmentByIdAsync(id);
+            if (department == null)
+                return NotFound();
+            return Ok(department);
+        }
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateDepartment(ulong id, UpdateDepartmentDTO updateDepartmentDTO)
         {
             var updatedDepartment = await _services.UpdateDepartmentAsync(id, updateDepartmentDTO);
@@ -42,6 +50,12 @@ namespace ITPortal.Presentation.Controllers
         {
             var createdDepartment = await _services.CreateDepartmentAsync(createDepartmentDTO);
             return Ok(createdDepartment);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDepartment(ulong id)
+        {
+            await _services.DeleteDepartmentAsync(id);
+            return NoContent();
         }
     }
 }

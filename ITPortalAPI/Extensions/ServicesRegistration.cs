@@ -27,7 +27,7 @@ namespace ITPortalAPI.Extensions
                 )
             );
             services.AddHttpContextAccessor();
-            services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            services.AddAutoMapper(typeof(ITPortal.Services.Mapping.MappingProfile).Assembly);
             services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));

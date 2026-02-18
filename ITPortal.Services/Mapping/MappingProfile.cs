@@ -27,6 +27,8 @@ namespace ITPortal.Services.Mapping
                 .ForMember(dest => dest.TeamCount, opt => opt.MapFrom(src => src.Teams.Count));
             CreateMap<CreateDepartmentDTO, Department>();
             CreateMap<UpdateDepartmentDTO, Department>();
+            CreateMap<DepartmentDTO, Department>();
+            CreateMap<Department, DepartmentDTO>();
 
             CreateMap<Team, TeamMiniDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : null))

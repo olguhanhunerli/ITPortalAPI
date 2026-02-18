@@ -15,6 +15,8 @@ namespace ITPortal.Services.Interfaces
     {
         Task<PagedResultDTO<DepartmentMiniDTO>> GetDepartmentsWithPaginationAsync(int pageNumber, int pageSize);
         Task<DepartmentMiniDTO> CreateDepartmentAsync(CreateDepartmentDTO createDepartmentDTO);
+        Task<DepartmentDTO> GetDepartmentByIdAsync(ulong id);
+        Task<bool> DeleteDepartmentAsync(ulong id);
         Task<List<DepartmentLookUpDTO>> GetDepartmentLookUpAsync(string? search, int take);
         Task<DepartmentMiniDTO> UpdateDepartmentAsync(ulong id, UpdateDepartmentDTO updateDepartmentDTO);
 
