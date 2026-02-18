@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ITPortal.Business/ITPortal.Business.csproj" />
+  <Project Path="ITPortal.Entities/ITPortal.Entities.csproj" />
+  <Project Path="ITPortal.Presentation/ITPortal.Presentation.csproj" />
+  <Project Path="ITPortal.Services/ITPortal.Services.csproj" />
+  <Project Path="ITPortalAPI/ITPortalAPI.csproj" />
+</Solution>

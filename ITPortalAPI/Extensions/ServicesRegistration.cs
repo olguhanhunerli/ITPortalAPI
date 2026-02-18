@@ -1,0 +1,82 @@
+﻿using AutoMapper;
+using ITPortal.Business.Context;
+using ITPortal.Business.Repository;
+using ITPortal.Business.Repository.GenericRepository;
+using ITPortal.Business.Repository.Interfaces;
+using ITPortal.Entities.Model;
+using ITPortal.Services;
+using ITPortal.Services.Interfaces;
+using ITPortal.Services.Mapping;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+namespace ITPortalAPI.Extensions
+{
+    public static class ServicesRegistration
+    {
+        public static IServiceCollection AddApplicationService(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseMySql(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    new MySqlServerVersion(new Version(8, 0, 32))
+                )
+            );
+            services.AddHttpContextAccessor();
+            services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+            services.AddScoped<IUserServices, UserService>();
+
+            services.AddScoped(typeof(ITeamRepository), typeof(TeamRepository));
+            services.AddScoped<ITeamService, TeamService>();
+
+            services.AddScoped(typeof(ILocationRepository), typeof(LocationRepository));
+            services.AddScoped<ILocationService, LocationService>();
+
+            services.AddScoped(typeof(IDepartmentRepository), typeof(DepartmentRepository));
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            var jwt = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            var key = Encoding.UTF8.GetBytes(jwt.Secret);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+
+                options.MapInboundClaims = false;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwt.Issuer,
+                    ValidAudience = jwt.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+
+                    ClockSkew = TimeSpan.Zero,
+
+                    NameClaimType = JwtRegisteredClaimNames.Sub,
+                    RoleClaimType = "role"
+                };
+            });
+            return services;
+
+        }
+
+    }
+}
