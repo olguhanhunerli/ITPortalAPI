@@ -15,6 +15,7 @@ namespace ITPortal.Business.Repository.Interfaces
     {
         Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
         Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take);
+        Task<Team> GetTeamByIdAsync(ulong id);
 
     }
 }

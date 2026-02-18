@@ -21,6 +21,14 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public Task<Team> GetTeamByIdAsync(ulong id)
+        {
+            return _set.AsNoTracking()
+                .Include(t => t.Department)
+                .Include(t => t.Users)
+                .FirstOrDefaultAsync(t => t.Id == id);
+        }
+
         public async Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take)
         {
             if (take <= 0) take = 50;

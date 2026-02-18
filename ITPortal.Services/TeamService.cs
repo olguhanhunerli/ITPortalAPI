@@ -32,6 +32,27 @@ namespace ITPortal.Services
             return _mapper.Map<TeamMiniDTO>(teamEntity);
         }
 
+        public async Task<bool> DeleteTeamAsync(ulong id)
+        {
+            var teamEntity = await _teamRepository.GetByIdAsync(id);
+            if (teamEntity == null) 
+                return false;
+            _teamRepository.Remove(teamEntity);
+            await _teamRepository.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<TeamDTO> GetTeamByIdAsync(ulong id)
+        {
+            var teamEntity = await _teamRepository.GetByIdAsync(id);
+            if (teamEntity == null)
+            {
+                throw new KeyNotFoundException($"Team with ID {id} not found.");
+            }
+            return _mapper.Map<TeamDTO>(teamEntity);
+        }
+
         public async Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take)
         {
             return await _teamRepository.GetTeamLookUpAsync(search, take);
@@ -49,6 +70,18 @@ namespace ITPortal.Services
                 PageSize = pageSize,
                 Items = mappedTeams
             };
+        }
+
+        public async Task<TeamMiniDTO> UpdateTeamAsync(ulong id, UpdateTeamDTO dto)
+        {
+            var teamEntity = await _teamRepository.GetByIdAsync(id);
+            if (teamEntity == null)
+            {
+                throw new KeyNotFoundException("Team not found.");
+            }
+            _teamRepository.Update(teamEntity);
+            await _teamRepository.SaveChangesAsync();
+            return _mapper.Map<TeamMiniDTO>(teamEntity);
         }
     }
 }

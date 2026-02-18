@@ -37,5 +37,41 @@ namespace ITPortal.Presentation.Controllers
             var createdTeam = await _service.CreateTeamAsync(teamDto);
             return Ok(createdTeam);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTeamById(ulong id)
+        {
+            try
+            {
+                var team = await _service.GetTeamByIdAsync(id);
+                return Ok(team);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTeam(ulong id)
+        {
+            var result = await _service.DeleteTeamAsync(id);
+            if (!result)
+            {
+                return NotFound($"Team with ID {id} not found.");
+            }
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTeam(ulong id, [FromBody] UpdateTeamDTO teamDto)
+        {
+            try
+            {
+                var updatedTeam = await _service.UpdateTeamAsync(id, teamDto);
+                return Ok(updatedTeam);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

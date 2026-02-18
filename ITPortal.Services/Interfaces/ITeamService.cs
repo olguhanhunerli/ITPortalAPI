@@ -15,6 +15,9 @@ namespace ITPortal.Services.Interfaces
         Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
         Task<TeamMiniDTO> CreateTeamAsync(CreateTeamDTO dto);
         Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take);
+        Task<TeamDTO> GetTeamByIdAsync(ulong id);
+        Task<TeamMiniDTO> UpdateTeamAsync(ulong id, UpdateTeamDTO dto);
+        Task<bool> DeleteTeamAsync(ulong id);
 
     }
 }
