@@ -50,5 +50,22 @@ namespace ITPortal.Services
                 Items = mappedDepartments
             };
         }
+
+        public async Task<DepartmentMiniDTO> UpdateDepartmentAsync(ulong id, UpdateDepartmentDTO updateDepartmentDTO)
+        {
+            var departmentEntity = await _departmentRepository.GetDepartmentByIdAsync(id);
+            var entity = new Department
+            {
+                Id = departmentEntity.Id,
+                Name = updateDepartmentDTO.Name,
+                CreatedAt = departmentEntity.CreatedAt,
+                Users = departmentEntity.Users,
+                Teams = departmentEntity.Teams
+            };
+            _departmentRepository.Update(entity);
+            await _departmentRepository.SaveChangesAsync();
+            return _mapper.Map<DepartmentMiniDTO>(entity);
+
+        }
     }
 }

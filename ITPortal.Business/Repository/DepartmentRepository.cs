@@ -20,6 +20,14 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public Task<Department> GetDepartmentByIdAsync(ulong id)
+        {
+            return _set.AsNoTracking()
+                .Include(d => d.Users)
+                .Include(d => d.Teams)
+                .FirstOrDefaultAsync(d => d.Id == id);
+        }
+
         public async Task<List<DepartmentLookUpDTO>> GetDepartmentLookUpAsync(string? search, int take)
         {
             if (take <= 0) take = 50;

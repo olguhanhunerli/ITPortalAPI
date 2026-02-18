@@ -31,6 +31,12 @@ namespace ITPortal.Presentation.Controllers
             var departmentLookUp = await _services.GetDepartmentLookUpAsync(search, take);
             return Ok(departmentLookUp);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDepartment(ulong id, UpdateDepartmentDTO updateDepartmentDTO)
+        {
+            var updatedDepartment = await _services.UpdateDepartmentAsync(id, updateDepartmentDTO);
+            return Ok(updatedDepartment);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateDepartment(CreateDepartmentDTO createDepartmentDTO)
         {
