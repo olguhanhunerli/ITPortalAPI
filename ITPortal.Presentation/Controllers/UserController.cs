@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private readonly IUserServices _services;
 

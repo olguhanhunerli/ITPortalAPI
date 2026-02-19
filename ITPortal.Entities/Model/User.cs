@@ -36,7 +36,7 @@ namespace ITPortal.Entities.Model
         public AuthType AuthType { get; set; } = AuthType.Local;
 
         [StringLength(255)]
-        public string? PasswordHash { get; set; }
+        public string PasswordHash { get; set; }
 
         [StringLength(40)]
         public string? ExternalProvider { get; set; }

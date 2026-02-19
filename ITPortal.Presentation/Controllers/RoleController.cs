@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class RoleController : ControllerBase
+    public class RoleController : BaseApiController
     {
         private readonly IRoleService _roleService;
 

@@ -47,6 +47,12 @@ namespace ITPortalAPI.Extensions
 
             services.AddScoped(typeof(IDepartmentRepository), typeof(DepartmentRepository));
             services.AddScoped<IDepartmentService, DepartmentService>();
+
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITokenService, TokenService>();
+
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             var jwt = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             var key = Encoding.UTF8.GetBytes(jwt.Secret);

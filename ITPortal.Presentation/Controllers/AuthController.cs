@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ITPortal.Entities.DTOs.AuthDTOs;
+using ITPortal.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +9,48 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseApiController
     {
-        [HttpGet("{test}")]
-        public IActionResult Test(string test)
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
         {
-            return Ok($"AuthController: {test}");
+            _authService = authService;
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
+        {
+            var ua = Request.Headers["User-Agent"].ToString();
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            var tokens = await _authService.LoginAsync(loginRequest, ua, ip);
+            return Ok(tokens);
+        }
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO refreshRequest)
+        {
+            var ua = Request.Headers["User-Agent"].ToString();
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var tokens = await _authService.RefreshAsync(refreshRequest.RefreshToken, ua, ip);
+            return Ok(tokens);
+        }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutRequestDTO logoutRequest)
+        {
+            await _authService.LogoutAsync(logoutRequest.RefreshToken);
+            return NoContent();
+        }
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            return Ok(new
+            {
+                userId = CurrentUserId,
+                userName = CurrentUserName,
+                departmentId = CurrentDepartmentId,
+                fullName = CurrentFullName,
+                roles = CurrentRoles
+            });
         }
     }
 }

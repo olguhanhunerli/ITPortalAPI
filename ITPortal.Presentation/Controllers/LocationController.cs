@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class LocationController : ControllerBase
+    public class LocationController : BaseApiController
     {
         private readonly ILocationService _services;
 

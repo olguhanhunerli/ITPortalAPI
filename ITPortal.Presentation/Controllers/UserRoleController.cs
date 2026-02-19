@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/user")]
-    public class UserRoleController : ControllerBase
+   
+    public class UserRoleController : BaseApiController
     {
         private readonly IUserRoleService _userRoleService;
 

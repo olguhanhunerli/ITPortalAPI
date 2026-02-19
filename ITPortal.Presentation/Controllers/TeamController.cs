@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TeamController : ControllerBase
+    public class TeamController : BaseApiController
     {
         private readonly ITeamService _service;
 

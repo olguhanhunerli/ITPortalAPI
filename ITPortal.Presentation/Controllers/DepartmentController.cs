@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DepartmentController : ControllerBase
+    
+    public class DepartmentController : BaseApiController
     {
         private readonly IDepartmentService _services;
 
