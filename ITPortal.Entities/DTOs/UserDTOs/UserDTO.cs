@@ -1,25 +1,20 @@
-﻿using System;
+﻿using ITPortal.Entities.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITPortal.Entities.Model
+namespace ITPortal.Entities.DTOs.UserDTOs
 {
-    public class User
+    public class UserDTO
     {
-        [Key]
-        [Column("Id")]
-        public ulong Id { get; set; } 
+        public ulong Id { get; set; }
 
-        [Required, StringLength(160)]
         public string FullName { get; set; } = default!;
 
-        [Required, StringLength(190)]
         public string Email { get; set; } = default!;
-
         [StringLength(80)]
         public string? Username { get; set; }
 
@@ -27,21 +22,13 @@ namespace ITPortal.Entities.Model
         public ulong? TeamId { get; set; }
         public ulong? LocationId { get; set; }
 
-        [StringLength(120)]
         public string? Title { get; set; }
 
-        [StringLength(40)]
         public string? Phone { get; set; }
 
-        public AuthType AuthType { get; set; } = AuthType.Local;
 
-        [StringLength(255)]
-        public string? PasswordHash { get; set; }
-
-        [StringLength(40)]
         public string? ExternalProvider { get; set; }
 
-        [StringLength(190)]
         public string? ExternalId { get; set; }
 
         public bool IsActive { get; set; } = true;
@@ -54,8 +41,8 @@ namespace ITPortal.Entities.Model
 
         public DateTime? DeletedAt { get; set; }
 
-        public Department? Department { get; set; }
-        public Team? Team { get; set; }
-        public Location? Location { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? TeamName { get; set; }
+        public string? LocationName { get; set; }
     }
 }

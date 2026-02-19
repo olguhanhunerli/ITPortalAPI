@@ -21,6 +21,11 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public async Task<bool> ExistsAsync(ulong id)
+        {
+            return await _set.AnyAsync(l => l.Id == id);
+        }
+
         public Task<Location> GetLocationByIdAsync(ulong id)
         {
             return _set
@@ -58,6 +63,7 @@ namespace ITPortal.Business.Repository
 
             var baseQuery = _set
                 .AsNoTracking()
+                .Include(x => x.Users)
                 .OrderBy(l => l.Id);
             return new PagedResultDTO<Location>
             {

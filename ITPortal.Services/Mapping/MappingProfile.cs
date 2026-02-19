@@ -20,7 +20,10 @@ namespace ITPortal.Services.Mapping
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : null))
                 .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team != null ? src.Team.Name : null))
                 .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null));
-           
+            CreateMap<CreateUserDTO, User>();
+            CreateMap<User, UserDTO>()
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name != null ? src.Department.Name : null));
+
 
             CreateMap<Department, DepartmentMiniDTO>()
                 .ForMember(dest => dest.UserCount, opt => opt.MapFrom(src => src.Users.Count))

@@ -15,5 +15,6 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<PagedResultDTO<Department>> GetDepartmentsWithPaginationAsync(int pageNumber, int pageSize);
         Task<List<DepartmentLookUpDTO>> GetDepartmentLookUpAsync(string? search, int take);
         Task<Department> GetDepartmentByIdAsync(ulong id);
+        Task<bool> ExistsAsync(ulong id);
     }
 }

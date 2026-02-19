@@ -13,9 +13,11 @@ namespace ITPortal.Business.Repository.Interfaces
 {
     public interface ITeamRepository : IGenericRepository<Team,ulong>
     {
-        Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
+        Task<PagedResultDTO<TeamMiniDTO>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
         Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take);
         Task<Team> GetTeamByIdAsync(ulong id);
+        Task<bool> ExistsAsync(ulong id);
+        Task<bool> TeamBelongsToDepartmentAsync(ulong teamId, ulong departmentId);
 
     }
 }

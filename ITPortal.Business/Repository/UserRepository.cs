@@ -2,14 +2,10 @@
 using ITPortal.Business.Repository.GenericRepository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.Common;
+using ITPortal.Entities.DTOs.UserDTOs;
 using ITPortal.Entities.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITPortal.Business.Repository
 {
@@ -17,6 +13,41 @@ namespace ITPortal.Business.Repository
     {
         public UserRepository(AppDbContext context, IHttpContextAccessor accessor) : base(context, accessor)
         {
+        }
+
+        public Task<User?> GetUserByEmailWithDetailsAsync(string email)
+        {
+           return _set
+                .AsNoTracking()
+                .Include(u => u.Department)
+                .Include(u => u.Location)
+                .Include(u => u.Team)
+                .FirstOrDefaultAsync(u => u.Email == email && u.DeletedAt == null);
+        }
+
+        public Task<List<UserLookUpDTO>> GetUserLookUpAsync(string? search, int take)
+        {
+            if (take <= 0) take = 10;
+            if(take > 200) take = 200;
+            var query = _set
+                .AsNoTracking()
+                
+                .Where(u => u.DeletedAt == null);
+            if (!string.IsNullOrEmpty(search))
+                {
+                search = search.ToLower();
+                query = query.Where(u => u.FullName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+            return query
+                .OrderBy(u => u.FullName)
+
+                .Select(u => new UserLookUpDTO
+                {
+                    Id = u.Id,
+                    FullName = u.FullName
+                })
+                .Take(take)
+                .ToListAsync();
         }
 
         public async Task<PagedResultDTO<User>> GetUsersWithPaginationAsync(int pageNumber, int pageSize)
@@ -29,6 +60,9 @@ namespace ITPortal.Business.Repository
             var baseQuery = _set
                 .AsNoTracking()
                 .Where(u => u.DeletedAt == null)
+                .Include(d => d.Department)
+                .Include(d => d.Team)
+                .Include(d => d.Location)
                 .OrderBy(u => u.FullName);
             var totalCount = await baseQuery.CountAsync();
             return new PagedResultDTO<User>

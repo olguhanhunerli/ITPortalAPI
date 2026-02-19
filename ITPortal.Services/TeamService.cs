@@ -58,12 +58,12 @@ namespace ITPortal.Services
             return await _teamRepository.GetTeamLookUpAsync(search, take);
         }
 
-        public async Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<TeamMiniDTO>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize)
         {
             var pagedTeams = await _teamRepository.GetTeamsWithPaginationAsync(pageNumber, pageSize);
-            var mappedTeams = _mapper.Map<List<Team>>(pagedTeams.Items);
+            var mappedTeams = _mapper.Map<List<TeamMiniDTO>>(pagedTeams.Items);
 
-            return new PagedResultDTO<Team>
+            return new PagedResultDTO<TeamMiniDTO>
             {
                 TotalCount = pagedTeams.TotalCount,
                 Page = pageNumber,

@@ -20,7 +20,7 @@ namespace ITPortal.Presentation.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetallTeams(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetallTeams(int pageNumber= 1, int pageSize= 10)
         {
             var teams = await _service.GetTeamsWithPaginationAsync(pageNumber, pageSize);
             return Ok(teams);

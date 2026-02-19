@@ -12,7 +12,7 @@ namespace ITPortal.Services.Interfaces
 {
     public interface ITeamService
     {
-        Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
+        Task<PagedResultDTO<TeamMiniDTO>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize);
         Task<TeamMiniDTO> CreateTeamAsync(CreateTeamDTO dto);
         Task<List<TeamLookUpDTO>> GetTeamLookUpAsync(string? search, int take);
         Task<TeamDTO> GetTeamByIdAsync(ulong id);

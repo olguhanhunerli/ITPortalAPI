@@ -20,9 +20,14 @@ namespace ITPortal.Business.Repository
         {
         }
 
-        public Task<Department> GetDepartmentByIdAsync(ulong id)
+        public async Task<bool> ExistsAsync(ulong id)
         {
-            return _set.AsNoTracking()
+           return await _set.AnyAsync(d => d.Id == id);
+        }
+
+        public async Task<Department> GetDepartmentByIdAsync(ulong id)
+        {
+            return await _set.AsNoTracking()
                 .Include(d => d.Users)
                 .Include(d => d.Teams)
                 .FirstOrDefaultAsync(d => d.Id == id);

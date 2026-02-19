@@ -21,6 +21,11 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public async Task<bool> ExistsAsync(ulong id)
+        {
+            return await _set.AnyAsync(t => t.Id == id);
+        }
+
         public Task<Team> GetTeamByIdAsync(ulong id)
         {
             return _set.AsNoTracking()
@@ -47,27 +52,42 @@ namespace ITPortal.Business.Repository
             }).ToListAsync();
         }
 
-        public async Task<PagedResultDTO<Team>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<TeamMiniDTO>> GetTeamsWithPaginationAsync(int pageNumber, int pageSize)
         {
-            if (pageSize <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageSize));
-            if (pageNumber <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageNumber));
+            if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize));
+            if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber));
             if (pageSize > 100) pageSize = 100;
 
-            var totalCount = await _set.CountAsync();
+            var query = _set.AsNoTracking();
 
-            var baseQuery = _set.AsNoTracking()
-                .Include(t => t.Department)
-                .Include(t => t.Users);
+            var totalCount = await query.CountAsync();
 
-            return new PagedResultDTO<Team>
+            var items = await query
+                .OrderBy(t => t.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new TeamMiniDTO
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    DepartmentId = t.DepartmentId,
+                    DepartmentName = t.Department != null ? t.Department.Name : null,
+                    UserCount = t.Users.Count() 
+                })
+                .ToListAsync();
+
+            return new PagedResultDTO<TeamMiniDTO>
             {
                 TotalCount = totalCount,
                 Page = pageNumber,
                 PageSize = pageSize,
-                Items = await baseQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync()
+                Items = items
             };
+        }
+
+        public async Task<bool> TeamBelongsToDepartmentAsync(ulong teamId, ulong departmentId)
+        {
+            return await _set.AnyAsync(t => t.Id == teamId && t.DepartmentId == departmentId);
         }
     }
 }

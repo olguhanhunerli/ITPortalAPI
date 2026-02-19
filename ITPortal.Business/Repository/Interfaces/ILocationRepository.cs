@@ -16,6 +16,7 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<PagedResultDTO<Location>> GetLocationsWithPaginationAsync(int pageNumber, int pageSize);
         Task<List<LocationLookUpDTO>> GetLocationLookUpAsync(string? search, int take);
         Task<Location> GetLocationByIdAsync(ulong id);
+        Task<bool> ExistsAsync(ulong id);
 
     }
 }

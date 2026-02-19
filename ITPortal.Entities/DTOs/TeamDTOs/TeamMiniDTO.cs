@@ -10,6 +10,7 @@ namespace ITPortal.Entities.DTOs.TeamDTOs
     {
         public ulong Id { get; set; }
         public string Name { get; set; } = default!;
+        public ulong? DepartmentId { get; set; }
         public string? DepartmentName { get; set; }
         public int UserCount { get; set; }
     }
