@@ -65,7 +65,10 @@ namespace ITPortal.Business.Repository
                 .Include(d => d.Department)
                 .Include(d => d.Team)
                 .Include(d => d.Location)
+                .Include(u => u.UserRoles)
+                  .ThenInclude(ur => ur.Role)
                 .OrderBy(u => u.FullName);
+           
             var totalCount = await baseQuery.CountAsync();
             return new PagedResultDTO<User>
             {

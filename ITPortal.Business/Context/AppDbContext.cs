@@ -13,7 +13,7 @@ namespace ITPortal.Business.Context
         public DbSet<Department> Departments { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserRole> user_roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -48,7 +48,6 @@ namespace ITPortal.Services
             if (createUserDTO.LocationId == null)
                 throw new ArgumentException("Location boş geçilemez.");
 
-            // 2) Email uniq
             var existing = await _userRepository.GetUserByEmailWithDetailsAsync(createUserDTO.Email);
             if (existing != null)
                 throw new InvalidOperationException("Email sistemde kayıtlıdır.");

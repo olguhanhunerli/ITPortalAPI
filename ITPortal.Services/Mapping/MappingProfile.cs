@@ -5,11 +5,6 @@ using ITPortal.Entities.DTOs.RoleDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
 using ITPortal.Entities.DTOs.UserDTOs;
 using ITPortal.Entities.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITPortal.Services.Mapping
 {
@@ -20,11 +15,12 @@ namespace ITPortal.Services.Mapping
             CreateMap<User, UserMiniDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : null))
                 .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team != null ? src.Team.Name : null))
-                .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null));
+                .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null))
+                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name))); 
             CreateMap<CreateUserDTO, User>();
             CreateMap<User, UserDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name != null ? src.Department.Name : null))
-                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name))); ;
+                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name)));
 
 
             CreateMap<Department, DepartmentMiniDTO>()
