@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITPortal.Entities.DTOs.DepartmentDTOs;
 using ITPortal.Entities.DTOs.LocationDTOs;
+using ITPortal.Entities.DTOs.RoleDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
 using ITPortal.Entities.DTOs.UserDTOs;
 using ITPortal.Entities.Model;
@@ -22,7 +23,8 @@ namespace ITPortal.Services.Mapping
                 .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null));
             CreateMap<CreateUserDTO, User>();
             CreateMap<User, UserDTO>()
-                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name != null ? src.Department.Name : null));
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name != null ? src.Department.Name : null))
+                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name))); ;
 
 
             CreateMap<Department, DepartmentMiniDTO>()
@@ -49,6 +51,12 @@ namespace ITPortal.Services.Mapping
             CreateMap<UpdateLocationDTO, Location>();
             CreateMap<Location, LocationDTO>();
             CreateMap<LocationDTO, Location>();
+
+            CreateMap<Role, RoleMiniDTO>();
+            CreateMap<CreateRoleDTO, Role>();
+            CreateMap<UpdateRoleDTO, Role>();
+            CreateMap<Role, RoleDTO>();
+            CreateMap<RoleDTO, Role>();    
         }
     }
 }

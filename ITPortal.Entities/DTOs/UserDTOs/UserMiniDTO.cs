@@ -21,6 +21,7 @@ namespace ITPortal.Entities.DTOs.UserDTOs
         public string? DepartmentName { get; set; }
 
         public string? TeamName { get; set; }
+        public List<string> Roles { get; set; } = new();
 
         public string? LocationName { get; set; }
     }

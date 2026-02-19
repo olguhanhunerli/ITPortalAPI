@@ -57,5 +57,6 @@ namespace ITPortal.Entities.Model
         public Department? Department { get; set; }
         public Team? Team { get; set; }
         public Location? Location { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }

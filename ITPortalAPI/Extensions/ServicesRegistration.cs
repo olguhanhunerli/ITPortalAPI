@@ -39,6 +39,9 @@ namespace ITPortalAPI.Extensions
             services.AddScoped(typeof(ILocationRepository), typeof(LocationRepository));
             services.AddScoped<ILocationService, LocationService>();
 
+            services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+            services.AddScoped<IRoleService, RoleService>();
+
             services.AddScoped(typeof(IDepartmentRepository), typeof(DepartmentRepository));
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
