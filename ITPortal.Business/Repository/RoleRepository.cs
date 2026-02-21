@@ -29,6 +29,11 @@ namespace ITPortal.Business.Repository
             return await q.AnyAsync();
         }
 
+        public Task<Role?> GetByNameAsync(string name)
+        {
+            return _set.AsNoTracking().FirstOrDefaultAsync(r => r.Name == name);
+        }
+
         public async Task<Role?> GetRoleByIdAsync(ulong id)
         {
             return await _set.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);

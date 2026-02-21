@@ -32,22 +32,26 @@ namespace ITPortal.Business.Repository
         public async Task<List<UserRoleDTO>> GetUserRolesAsync(ulong userId)
         {
             return await _set
-                      .AsNoTracking()
-                      .OrderBy(x => x.Role.Name)
-                      .Where(ur => ur.UserId == userId)
-                      .Select(ur => new UserRoleDTO
-                      {
-                          RoleId = ur.RoleId,
-                          RoleName = ur.Role.Name,
-                          AssignedAt = ur.AssignedAt
-                      }).ToListAsync();
+                .AsNoTracking()
+                .Where(x => x.UserId == userId )
+                .Include(x => x.Role)
+                .Select(x => new UserRoleDTO
+                {
+                    UserId = x.UserId,
+                    RoleId = x.RoleId,
+                    RoleName = x.Role != null ? x.Role.Name : null,
+                    AssignedAt = x.AssignedAt
+                })
+                .ToListAsync();
         }
         public async Task<bool> RemoveAsync(ulong userId, ulong roleId)
         {
-            var entity = await _set.FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId);
+            var entity = await _set
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == roleId);
+
             if (entity == null) return false;
 
-            _set.Remove(entity);
+            Remove(entity);
             return true;
         }
     }

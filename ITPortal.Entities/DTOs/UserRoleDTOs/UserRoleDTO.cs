@@ -8,6 +8,7 @@ namespace ITPortal.Entities.DTOs.UserRoleDTOs
 {
     public class UserRoleDTO
     {
+        public ulong UserId { get; set; }
         public ulong RoleId { get; set; }
         public string RoleName { get; set; } = default!;
         public DateTime AssignedAt { get; set; }

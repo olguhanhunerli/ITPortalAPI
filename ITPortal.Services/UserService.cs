@@ -21,14 +21,17 @@ namespace ITPortal.Services
         private readonly ILocationRepository _locationRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IDepartmentRepository _departmentRepository;
-
-        public UserService(IUserRepository userRepository, IMapper mapper, ILocationRepository locationRepository, ITeamRepository teamRepository, IDepartmentRepository departmentRepository)
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IRoleRepository _roleRepository;
+        public UserService(IUserRepository userRepository, IMapper mapper, ILocationRepository locationRepository, ITeamRepository teamRepository, IDepartmentRepository departmentRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _locationRepository = locationRepository;
             _teamRepository = teamRepository;
             _departmentRepository = departmentRepository;
+            _userRoleRepository = userRoleRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<UserDTO> CreateUserAsync(CreateUserDTO createUserDTO)
@@ -81,13 +84,32 @@ namespace ITPortal.Services
             userEntity.ExternalId = null;
             userEntity.LastLoginAt = null;
 
+            
+
             var hash = Hash(createUserDTO.Password, out var salt);
             userEntity.PasswordHash = $"HMACSHA256.{salt}.{hash}";
 
             await _userRepository.AddAsync(userEntity);
             await _userRepository.SaveChangesAsync();
+            
+            var employeeRole = await _roleRepository.GetByNameAsync("Employee");
+            if (employeeRole == null)
+                throw new InvalidOperationException("Employee rolü bulunamadı.");
 
-            return _mapper.Map<UserDTO>(userEntity);
+            var already = await _userRoleRepository.ExistsAsync(userEntity.Id, employeeRole.Id);
+            if (!already)
+            {
+                await _userRoleRepository.AddAsync(new UserRole
+                {
+                    UserId = userEntity.Id,
+                    RoleId = employeeRole.Id,
+                    AssignedAt = DateTime.UtcNow
+                });
+
+                await _userRoleRepository.SaveChangesAsync();
+            }
+            var createdUser = await _userRepository.GetUserByEmailWithDetailsAsync(userEntity.Email);
+            return _mapper.Map<UserDTO>(createdUser);
         }
 
         public async Task<UserDTO> GetUserByEmailWithDetailsAsync(string email)

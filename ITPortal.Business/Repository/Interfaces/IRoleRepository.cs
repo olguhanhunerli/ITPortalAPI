@@ -16,5 +16,6 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<Role?> GetRoleByIdAsync(ulong id);
         Task<PagedResultDTO<Role>> GetRoleWithPaginationAsync(int pageNumber, int pageSize);
         Task<List<RoleLookupDTO>> GetRoleLookUpAsync(string? search, int take);
+        Task<Role?> GetByNameAsync(string name);
     }
 }

@@ -16,12 +16,11 @@ namespace ITPortal.Services.Mapping
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : null))
                 .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team != null ? src.Team.Name : null))
                 .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null))
-                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name))); 
+                .ForMember(d => d.Roles, opt => opt.MapFrom(s => (s.UserRoles ?? new List<UserRole>()).Where(ur => ur.Role != null).Select(ur => ur.Role!.Name).ToList()));
             CreateMap<CreateUserDTO, User>();
             CreateMap<User, UserDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name != null ? src.Department.Name : null))
-                .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name)));
-
+                .ForMember(d => d.Roles, opt => opt.MapFrom(s => (s.UserRoles ?? new List<UserRole>()).Where(ur => ur.Role != null).Select(ur => ur.Role!.Name).ToList()));
 
             CreateMap<Department, DepartmentMiniDTO>()
                 .ForMember(dest => dest.UserCount, opt => opt.MapFrom(src => src.Users.Count))
