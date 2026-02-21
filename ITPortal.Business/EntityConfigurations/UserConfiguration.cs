@@ -29,6 +29,7 @@ namespace ITPortal.Business.EntityConfigurations
              .WithMany(l => l.Users)
              .HasForeignKey(u => u.LocationId)
              .OnDelete(DeleteBehavior.Restrict);
+           
         }
     }
 }

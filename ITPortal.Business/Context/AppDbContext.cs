@@ -13,7 +13,7 @@ namespace ITPortal.Business.Context
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<Role> Roles => Set<Role>();
-        public DbSet<UserRole> UserRoles => Set<UserRole>();
+        public DbSet<UserRole> user_roles => Set<UserRole>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         public DbSet<LookupType> LookupTypes => Set<LookupType>();

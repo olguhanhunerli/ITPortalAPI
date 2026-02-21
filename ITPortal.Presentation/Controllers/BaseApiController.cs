@@ -13,12 +13,12 @@ namespace ITPortal.Presentation.Controllers
         protected const string ClaimUserName = "userName";
         protected const string ClaimDepartmentId = "departmentId";
         protected const string ClaimFullName = "fullName";
-
+      
         protected ulong? CurrentUserId => GetUlongClaim(ClaimUserId);
 
         protected string CurrentUserName =>
             User?.FindFirst(ClaimUserName)?.Value ?? string.Empty;
-
+       
         protected ulong? CurrentDepartmentId => GetUlongClaim(ClaimDepartmentId);
 
         protected string CurrentFullName =>
@@ -42,7 +42,10 @@ namespace ITPortal.Presentation.Controllers
             if (string.IsNullOrWhiteSpace(value)) return null;
             return ulong.TryParse(value, out var id) ? id : null;
         }
-
+        protected void EnsureAuthenticated()
+        {
+            if (CurrentUserId == null) throw new UnauthorizedAccessException("UserId claim missing.");
+        }
         protected IActionResult NotFoundMsg(string message) =>
             NotFound(new { message });
 

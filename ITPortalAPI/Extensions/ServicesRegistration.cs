@@ -48,6 +48,9 @@ namespace ITPortalAPI.Extensions
             services.AddScoped(typeof(IDepartmentRepository), typeof(DepartmentRepository));
             services.AddScoped<IDepartmentService, DepartmentService>();
 
+            services.AddScoped(typeof(ILookupRepository), typeof(LookupRepository));
+            services.AddScoped<ILookupService, LookupService>();
+
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
@@ -83,7 +86,7 @@ namespace ITPortalAPI.Extensions
                     ClockSkew = TimeSpan.Zero,
 
                     NameClaimType = JwtRegisteredClaimNames.Sub,
-                    RoleClaimType = "role"
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
                 };
             });
             return services;
