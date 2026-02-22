@@ -15,11 +15,12 @@ namespace ITPortal.Business.Context
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<UserRole> user_roles => Set<UserRole>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
-
         public DbSet<LookupType> LookupTypes => Set<LookupType>();
         public DbSet<Lookup> Lookups => Set<Lookup>();
         public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<TicketCategory> TicketCategories => Set<TicketCategory>();
+        public DbSet<TicketComment> TicketComments => Set<TicketComment>();
+        public DbSet<TicketEvent> TicketEvents  => Set<TicketEvent>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

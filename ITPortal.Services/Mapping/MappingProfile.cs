@@ -4,6 +4,7 @@ using ITPortal.Entities.DTOs.LocationDTOs;
 using ITPortal.Entities.DTOs.LookupDTOs;
 using ITPortal.Entities.DTOs.RoleDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
+using ITPortal.Entities.DTOs.TicketCategoryDTOs;
 using ITPortal.Entities.DTOs.UserDTOs;
 using ITPortal.Entities.Model;
 
@@ -55,6 +56,13 @@ namespace ITPortal.Services.Mapping
             CreateMap<Lookup, LookupLookupDTO>();
             CreateMap<Lookup, LookupDTO>()
                 .ForMember(d => d.LookupTypeCode, opt => opt.MapFrom(s => s.LookupType != null ? s.LookupType.Code : null));
+
+            CreateMap<CreateTicketCategoryDTO, TicketCategory>();
+            CreateMap<UpdateTicketCategoryDTO, TicketCategory>();
+
+            CreateMap<TicketCategory, TicketCategoryDTO>()
+                .ForMember(d => d.ParentName, o => o.MapFrom(s => s.Parent != null ? s.Parent.Code : null))
+                .ForMember(d => d.DefaultTeamName, o => o.MapFrom(s => s.DefaultTeam != null ? s.DefaultTeam.Name : null));
         }
     }
 }

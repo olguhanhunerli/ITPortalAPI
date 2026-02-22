@@ -25,6 +25,11 @@ namespace ITPortal.Business.EntityConfigurations
              .WithMany(x => x.Children)
              .HasForeignKey(x => x.ParentId)
              .OnDelete(DeleteBehavior.Restrict);
+            
+            b.HasOne(x => x.ApprovalType)
+             .WithMany()
+             .HasForeignKey(x => x.ApprovalTypeId)
+             .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(x => x.DefaultTeam)
              .WithMany()

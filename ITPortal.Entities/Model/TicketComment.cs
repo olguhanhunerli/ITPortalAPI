@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Entities.Model
 {
-    public class TicketComment : AuditableEntity<TicketComment>
+    public class TicketComment : AuditableEntity<ulong>
     {
         public ulong TicketId { get; set; }
         public Ticket Ticket { get; set; }

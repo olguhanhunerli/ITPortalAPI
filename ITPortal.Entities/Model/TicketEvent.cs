@@ -2,7 +2,7 @@
 
 namespace ITPortal.Entities.Model
 {
-    public class TicketEvent : BaseEntity<TicketEvent>
+    public class TicketEvent : BaseEntity<ulong>
     {
         public ulong TicketId { get; set; }
         public Ticket Ticket { get; set; }
