@@ -1,7 +1,7 @@
 ﻿using ITPortal.Business.Repository.GenericRepository;
-using ITPortal.Entities.DTOs.Common;
 using ITPortal.Entities.DTOs.DepartmentDTOs;
 using ITPortal.Entities.Model;
+using ITPortal.Entities.Model.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

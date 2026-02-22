@@ -1,9 +1,9 @@
 ﻿using ITPortal.Business.Context;
 using ITPortal.Business.Repository.GenericRepository;
 using ITPortal.Business.Repository.Interfaces;
-using ITPortal.Entities.DTOs.Common;
 using ITPortal.Entities.DTOs.UserDTOs;
 using ITPortal.Entities.Model;
+using ITPortal.Entities.Model.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 

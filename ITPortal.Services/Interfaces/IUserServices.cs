@@ -1,5 +1,5 @@
-﻿using ITPortal.Entities.DTOs.Common;
-using ITPortal.Entities.DTOs.UserDTOs;
+﻿using ITPortal.Entities.DTOs.UserDTOs;
+using ITPortal.Entities.Model.Common;
 
 namespace ITPortal.Services.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿using ITPortal.Entities.DTOs.Common;
+﻿using ITPortal.Entities.Model.Common;
 
 namespace ITPortal.Entities.Model
 {

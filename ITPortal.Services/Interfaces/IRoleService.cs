@@ -1,5 +1,5 @@
-﻿using ITPortal.Entities.DTOs.Common;
-using ITPortal.Entities.DTOs.RoleDTOs;
+﻿using ITPortal.Entities.DTOs.RoleDTOs;
+using ITPortal.Entities.Model.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

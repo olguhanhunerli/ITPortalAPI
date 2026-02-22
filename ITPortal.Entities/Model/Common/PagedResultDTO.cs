@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITPortal.Entities.DTOs.Common
+namespace ITPortal.Entities.Model.Common
 {
     public class PagedResultDTO<T>
     {

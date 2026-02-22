@@ -18,6 +18,8 @@ namespace ITPortal.Business.Context
 
         public DbSet<LookupType> LookupTypes => Set<LookupType>();
         public DbSet<Lookup> Lookups => Set<Lookup>();
+        public DbSet<Ticket> Tickets => Set<Ticket>();
+        public DbSet<TicketCategory> TicketCategories => Set<TicketCategory>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
