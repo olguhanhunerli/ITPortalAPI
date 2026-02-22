@@ -108,7 +108,6 @@ namespace ITPortal.Business.Repository
                     parent.Children.Add(dict[item.Id]);
             }
 
-            // rootlar: parent'ı listte olmayan veya null olanlar
             var roots = list
                 .Where(x => !x.ParentId.HasValue || !dict.ContainsKey(x.ParentId.Value))
                 .Select(x => dict[x.Id])
