@@ -31,8 +31,6 @@ namespace ITPortal.Entities.Model
         public ulong? DepartmentId { get; set; }
 
         public bool IsMajor { get; set; }
-        public ulong? MajorIncidentId { get; set; }
-
         public ulong? ApprovalStateId { get; set; }
 
         public string Title { get; set; } = null!;
@@ -67,6 +65,7 @@ namespace ITPortal.Entities.Model
         public Lookup? Impact { get; set; }
         public Lookup? Urgency { get; set; }
         public Lookup? ApprovalState { get; set; }
+        public MajorIncident? MajorIncident { get; set; }
 
         public ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>();
         public ICollection<TicketEvent> Events { get; set; } = new List<TicketEvent>();

@@ -21,6 +21,9 @@ namespace ITPortal.Business.Context
         public DbSet<TicketCategory> TicketCategories => Set<TicketCategory>();
         public DbSet<TicketComment> TicketComments => Set<TicketComment>();
         public DbSet<TicketEvent> TicketEvents  => Set<TicketEvent>();
+        public DbSet<MajorIncident> MajorIncidents  => Set<MajorIncident>();
+        public DbSet<MajorIncidentUpdate> MajorIncidentUpdates  => Set<MajorIncidentUpdate>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

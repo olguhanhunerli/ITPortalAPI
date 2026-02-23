@@ -21,9 +21,10 @@ namespace ITPortal.Entities.Model
         public Lookup ApprovalType { get; set; }
         public string? FormSchemaJson { get; set; }
         public bool IsActive { get; set; }
-        public TicketCategory Parent { get; set; }
+        public TicketCategory? Parent { get; set; }
         public Team DefaultTeam { get; set; }
         public ICollection<TicketCategory> Children { get; set; } = new List<TicketCategory>();
-        public ICollection<Ticket> Tickets { get; set; }
+        public ICollection<Ticket> CategoryTickets { get; set; } = new List<Ticket>();
+        public ICollection<Ticket> SubcategoryTickets { get; set; } = new List<Ticket>();
     }
 }
