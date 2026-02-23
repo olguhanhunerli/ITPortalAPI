@@ -57,14 +57,14 @@ namespace ITPortal.Business.EntityConfigurations
                 .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(x => x.Category)
-              .WithMany(c => c.CategoryTickets)  
-              .HasForeignKey(x => x.CategoryId)
-              .OnDelete(DeleteBehavior.SetNull);
+               .WithMany(c => c.CategoryTickets)  
+               .HasForeignKey(x => x.CategoryId)
+               .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(x => x.Subcategory)
-             .WithMany(c => c.SubcategoryTickets) 
-             .HasForeignKey(x => x.SubcategoryId)
-             .OnDelete(DeleteBehavior.SetNull);
+              .WithMany(c => c.SubcategoryTickets) 
+              .HasForeignKey(x => x.SubcategoryId)
+              .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(x => x.Requester)
                 .WithMany()

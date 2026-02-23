@@ -17,5 +17,13 @@ namespace ITPortal.Presentation.Controllers
             var result = await _ticketService.GetTicketsPageAsync(pageNumber, pageSize);
             return Ok(result);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTicketById(ulong id)
+        {
+            var result = await _ticketService.GetTicketByIdAsync(id);
+            if (result == null)
+                return NotFoundMsg("Ticket Bulunamadı");
+            return Ok(result);
+        }
     }
 }

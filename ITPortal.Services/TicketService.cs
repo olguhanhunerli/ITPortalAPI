@@ -22,6 +22,13 @@ namespace ITPortal.Services
             _mapper = mapper;
         }
 
+        public async Task<TicketDetailDTO> GetTicketByIdAsync(ulong id)
+        {
+            var entity = await _ticketRepository.GetByIdAsync(id);
+            return _mapper.Map<TicketDetailDTO>(entity);
+
+        }
+
         public async Task<PagedResultDTO<TicketMiniDTO>> GetTicketsPageAsync(int pageNumber, int pageSize)
         {
             var entity = await _ticketRepository.GetTicketsPageAsync(pageNumber, pageSize);

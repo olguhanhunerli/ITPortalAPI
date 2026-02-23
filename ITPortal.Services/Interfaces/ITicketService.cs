@@ -11,5 +11,6 @@ namespace ITPortal.Services.Interfaces
     public interface ITicketService
     {
         Task<PagedResultDTO<TicketMiniDTO>> GetTicketsPageAsync(int pageNumber, int pageSize);
+        Task<TicketDetailDTO> GetTicketByIdAsync(ulong id);
     }
 }
