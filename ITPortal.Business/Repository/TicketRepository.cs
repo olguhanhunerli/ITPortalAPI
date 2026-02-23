@@ -15,6 +15,40 @@ namespace ITPortal.Business.Repository
         {
         }
 
+        public async Task<string> GenerateTicketNumberAsync(ulong ticketId)
+        {
+            return $"TCK-{ticketId:D6}";
+        }
+
+        public async Task<Ticket?> GetByTicketIdAsync(ulong id)
+        {
+            var q = _set
+             .Where(t => t.Id == id)
+            .Include(x => x.Type)
+            .Include(x => x.Status)
+            .Include(x => x.Priority)
+            .Include(x => x.Impact)
+            .Include(x => x.Urgency)
+            .Include(x => x.ApprovalState)
+
+            .Include(x => x.Category)
+            .Include(x => x.Subcategory)
+
+            .Include(x => x.Requester)
+            .Include(x => x.RequestedFor)
+            .Include(x => x.Assignee)
+            .Include(x => x.AssignedTeam)
+
+            .Include(x => x.Department)
+            .Include(x => x.Location)
+
+            .Include(x => x.Comments)
+            .Include(x => x.Events);
+
+            return await q.SingleOrDefaultAsync();
+
+        }
+
         public async Task<PagedResultDTO<Ticket>> GetTicketsPageAsync(int pageNumber, int pageSize)
         {
             pageNumber = pageNumber <= 0 ? 1 : pageNumber;

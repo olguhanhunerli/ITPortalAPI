@@ -11,6 +11,8 @@ namespace ITPortal.Business.Repository.Interfaces
 {
     public interface ITicketRepository : IGenericRepository<Ticket, ulong>
     {
+        Task<string> GenerateTicketNumberAsync(ulong ticketId);
         Task<PagedResultDTO<Ticket>> GetTicketsPageAsync(int pageNumber, int pageSize);
+        Task<Ticket?> GetByTicketIdAsync(ulong id);
     }
 }

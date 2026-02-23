@@ -1,4 +1,5 @@
-﻿using ITPortal.Services.Interfaces;
+﻿using ITPortal.Entities.DTOs.TicketDTOs;
+using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITPortal.Presentation.Controllers
@@ -23,6 +24,13 @@ namespace ITPortal.Presentation.Controllers
             var result = await _ticketService.GetTicketByIdAsync(id);
             if (result == null)
                 return NotFoundMsg("Ticket Bulunamadı");
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDTO request)
+        {
+            EnsureAuthenticated();
+            var result = await _ticketService.CreateTicketAsync(request, CurrentUserId!.Value);
             return Ok(result);
         }
     }

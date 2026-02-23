@@ -12,5 +12,6 @@ namespace ITPortal.Services.Interfaces
     {
         Task<PagedResultDTO<TicketMiniDTO>> GetTicketsPageAsync(int pageNumber, int pageSize);
         Task<TicketDetailDTO> GetTicketByIdAsync(ulong id);
+        Task<TicketDetailDTO> CreateTicketAsync(CreateTicketDTO dto, ulong requesterId);
     }
 }

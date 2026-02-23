@@ -86,6 +86,7 @@ namespace ITPortal.Services.Mapping
                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null))
                .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments))
                .ForMember(d => d.Events, opt => opt.MapFrom(s => s.Events));
+            CreateMap<CreateTicketDTO, Ticket>();
 
             CreateMap<TicketComment, TicketCommentDTO>()
                 .ForMember(d => d.AuthorName, opt => opt.MapFrom(s => s.Author.FullName))
