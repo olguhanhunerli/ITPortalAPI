@@ -99,6 +99,25 @@ namespace ITPortal.Services
             return _mapper.Map<TicketDetailDTO>(created);
         }
 
+        public async Task<TicketDetailDTO?> GetMyTicketByIdAsync(ulong userId, ulong ticketId)
+        {
+            var entity = await _ticketRepository.GetMyTicketByIdAsync(userId,ticketId);
+            return _mapper.Map<TicketDetailDTO>(entity);
+        }
+
+        public async Task<PagedResultDTO<TicketMiniDTO>> GetMyTicketsPageAsync(ulong userId, int pageNumber, int pageSize)
+        {
+            var entity = await _ticketRepository.GetMyTicketsPageAsync(userId,pageNumber, pageSize);
+
+            return new PagedResultDTO<TicketMiniDTO>
+            {
+                TotalCount = entity.TotalCount,
+                Page = entity.Page,
+                PageSize = entity.PageSize,
+                Items = _mapper.Map<List<TicketMiniDTO>>(entity.Items)
+            };
+        }
+
         public async Task<TicketDetailDTO> GetTicketByIdAsync(ulong id)
         {
             var entity = await _ticketRepository.GetByTicketIdAsync(id);

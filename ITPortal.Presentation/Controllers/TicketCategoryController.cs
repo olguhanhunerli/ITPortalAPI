@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+
     public class TicketCategoryController : BaseApiController
     {
         private readonly ITicketCategoryService _service;

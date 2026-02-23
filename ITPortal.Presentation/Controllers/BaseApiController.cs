@@ -6,7 +6,6 @@ using System.Security.Claims;
 namespace ITPortal.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase
     {
         protected const string ClaimUserId = "userId";

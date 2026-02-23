@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+
     public class LookupController : BaseApiController
     {
         private readonly ILookupService _lookupService;

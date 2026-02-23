@@ -14,5 +14,7 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<string> GenerateTicketNumberAsync(ulong ticketId);
         Task<PagedResultDTO<Ticket>> GetTicketsPageAsync(int pageNumber, int pageSize);
         Task<Ticket?> GetByTicketIdAsync(ulong id);
+        Task<PagedResultDTO<Ticket>> GetMyTicketsPageAsync(ulong userId, int pageNumber, int pageSize);
+        Task<Ticket?> GetMyTicketByIdAsync(ulong userId, ulong ticketId);
     }
 }

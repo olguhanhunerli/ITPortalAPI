@@ -34,91 +34,176 @@ namespace ITPortal.Presentation.Authorization
 
     public static class RoleGroups
     {
+        // ========================
+        // SYSTEM / ADMIN LEVEL
+        // ========================
+
         public const string SuperAdmins =
             PortalRoles.SuperAdmin;
 
-        public const string SystemAdmins =
+        public const string SystemLevelAccess =
             PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
 
-        public const string OrgAdmins =
-            PortalRoles.OrgAdmin + "," + PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
-
-        public const string FullAccess =
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+        public const string OrgLevelAccess =
+            PortalRoles.OrgAdmin + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string AnyAdmin =
-            PortalRoles.OrgAdmin + "," + PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.OrgAdmin + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // GENERAL PORTAL ACCESS
+        // ========================
 
         public const string PortalUsers =
             PortalRoles.Employee + "," +
-            PortalRoles.ServiceDeskAgent + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.AccessApprover + "," + PortalRoles.ChangeManager + "," +
-            PortalRoles.IncidentManager + "," + PortalRoles.ProblemManager + "," +
-            PortalRoles.AssetManager + "," + PortalRoles.Procurement + "," +
-            PortalRoles.KnowledgeAuthor + "," + PortalRoles.KnowledgeReviewer + "," +
-            PortalRoles.ReportViewer + "," + PortalRoles.ReportAdmin + "," +
-            PortalRoles.OrgAdmin + "," + PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.ServiceDeskAgent + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.AccessApprover + "," +
+            PortalRoles.ChangeManager + "," +
+            PortalRoles.IncidentManager + "," +
+            PortalRoles.ProblemManager + "," +
+            PortalRoles.AssetManager + "," +
+            PortalRoles.Procurement + "," +
+            PortalRoles.KnowledgeAuthor + "," +
+            PortalRoles.KnowledgeReviewer + "," +
+            PortalRoles.ReportViewer + "," +
+            PortalRoles.ReportAdmin + "," +
+            PortalRoles.OrgAdmin + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
+
+        // ========================
+        // TICKET PERMISSIONS
+        // ========================
+
+        // Ticket açabilir (Employee dahil)
         public const string TicketCreate =
             PortalRoles.Employee + "," +
-            PortalRoles.ServiceDeskAgent + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.ServiceDeskAgent + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
+        // Ticket okuyabilir (Employee dahil ama data filtreli)
+        public const string TicketReadSelf =
+            PortalRoles.Employee + "," +
+            PortalRoles.ServiceDeskAgent + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+        // Ticket yönetebilir (assign, status change vs)
         public const string TicketReadWrite =
-            PortalRoles.ServiceDeskAgent + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.IncidentManager + "," + PortalRoles.ProblemManager + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.ServiceDeskAgent + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.IncidentManager + "," +
+            PortalRoles.ProblemManager + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
+        // Ticket konfigürasyon (SLA, Category vs)
         public const string TicketConfig =
-            PortalRoles.ServiceDeskLead + "," + PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // APPROVALS
+        // ========================
 
         public const string AccessApproval =
-            PortalRoles.AccessApprover + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.AccessApprover + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string ChangeApproval =
-            PortalRoles.ChangeManager + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.ChangeManager + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string MajorIncidentManage =
-            PortalRoles.IncidentManager + "," + PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.IncidentManager + "," +
+            PortalRoles.ServiceDeskLead + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string ProblemManage =
             PortalRoles.ProblemManager + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // ASSET / PROCUREMENT
+        // ========================
 
         public const string AssetManage =
             PortalRoles.AssetManager + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string ProcurementManage =
             PortalRoles.Procurement + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // KNOWLEDGE BASE
+        // ========================
 
         public const string KnowledgeRead =
             PortalRoles.Employee + "," +
-            PortalRoles.KnowledgeAuthor + "," + PortalRoles.KnowledgeReviewer + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.KnowledgeAuthor + "," +
+            PortalRoles.KnowledgeReviewer + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string KnowledgeWrite =
-            PortalRoles.KnowledgeAuthor + "," + PortalRoles.KnowledgeReviewer + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.KnowledgeAuthor + "," +
+            PortalRoles.KnowledgeReviewer + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string KnowledgePublish =
             PortalRoles.KnowledgeReviewer + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // REPORTS
+        // ========================
 
         public const string ReportsView =
-            PortalRoles.ReportViewer + "," + PortalRoles.ReportAdmin + "," +
+            PortalRoles.ReportViewer + "," +
+            PortalRoles.ReportAdmin + "," +
             PortalRoles.ServiceDeskLead + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
 
         public const string ReportsAdmin =
             PortalRoles.ReportAdmin + "," +
-            PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
+
+
+        // ========================
+        // MASTER DATA
+        // ========================
 
         public const string MasterDataWrite =
-            PortalRoles.OrgAdmin + "," + PortalRoles.SystemAdmin + "," + PortalRoles.SuperAdmin;
+            PortalRoles.OrgAdmin + "," +
+            PortalRoles.SystemAdmin + "," +
+            PortalRoles.SuperAdmin;
     }
 }

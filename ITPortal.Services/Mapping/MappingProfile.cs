@@ -87,7 +87,12 @@ namespace ITPortal.Services.Mapping
                .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments))
                .ForMember(d => d.Events, opt => opt.MapFrom(s => s.Events));
             CreateMap<CreateTicketDTO, Ticket>();
-
+            CreateMap<Ticket, TicketMiniDTO>()
+                .ForMember(d => d.PriorityName, opt => opt.MapFrom(s => s.Priority != null ? s.Priority.NameTr : null))
+                .ForMember(d => d.RequesterName, opt => opt.MapFrom(s => s.Requester != null ? s.Requester.FullName : null))
+                .ForMember(d => d.AssigneeName, opt => opt.MapFrom(s => s.Assignee != null ? s.Assignee.FullName : null))
+                .ForMember(d => d.StatusName, opt => opt.MapFrom(s => s.Status != null ? s.Status.NameTr : null))
+                .ReverseMap();
             CreateMap<TicketComment, TicketCommentDTO>()
                 .ForMember(d => d.AuthorName, opt => opt.MapFrom(s => s.Author.FullName))
                 .ForMember(d => d.VisibilityName, opt => opt.MapFrom(s => s.Visibility.NameTr));
