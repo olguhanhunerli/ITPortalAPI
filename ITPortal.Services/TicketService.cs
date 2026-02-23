@@ -49,7 +49,7 @@ namespace ITPortal.Services
                 assignedTeamId = category?.DefaultTeamId;
             }
 
-            const ulong StatusNewId = 1;
+            const ulong StatusNewId = 5;
 
             var ticket = new Ticket
             {

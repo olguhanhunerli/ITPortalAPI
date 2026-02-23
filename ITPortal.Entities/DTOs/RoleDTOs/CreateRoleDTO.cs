@@ -9,6 +9,8 @@ namespace ITPortal.Entities.DTOs.RoleDTOs
     public class CreateRoleDTO
     {
         public string Name { get; set; }
+        public string NameTr { get; set; }
+        public string DescriptionTr { get; set; }
         public string Description { get; set; }
     }
 }

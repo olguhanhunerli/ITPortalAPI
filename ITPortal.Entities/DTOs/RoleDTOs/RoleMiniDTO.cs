@@ -10,6 +10,8 @@ namespace ITPortal.Entities.DTOs.RoleDTOs
     {
         public ulong Id { get; set; }
         public string Name { get; set; } = default!;
+        public string NameTr { get; set; }
+        public string DescriptionTr { get; set; }
         public string? Description { get; set; }
     }
 }

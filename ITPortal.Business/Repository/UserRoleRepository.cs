@@ -39,7 +39,7 @@ namespace ITPortal.Business.Repository
                 {
                     UserId = x.UserId,
                     RoleId = x.RoleId,
-                    RoleName = x.Role != null ? x.Role.Name : null,
+                    RoleName = string.IsNullOrWhiteSpace(x.Role.NameTr)? x.Role.Name: x.Role.NameTr,
                     AssignedAt = x.AssignedAt
                 })
                 .ToListAsync();

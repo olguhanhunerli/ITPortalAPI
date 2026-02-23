@@ -53,7 +53,9 @@ namespace ITPortal.Business.Repository
             return q.OrderBy(r => r.Name).Take(take).Select(r => new RoleLookupDTO
             {
                 Id = r.Id,
-                Name = r.Name
+                Name = r.Name,
+                NameTr = r.NameTr
+                
             }).ToListAsync();
         }
 

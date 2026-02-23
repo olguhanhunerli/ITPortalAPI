@@ -10,6 +10,8 @@ namespace ITPortal.Entities.Model
     {
         public ulong Id { get; set; }
         public string Name { get; set; }
+        public string NameTr { get; set; }
+        public string DescriptionTr { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
