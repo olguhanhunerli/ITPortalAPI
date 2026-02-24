@@ -20,7 +20,9 @@ namespace ITPortal.Entities.Model
         public ulong? SubcategoryId { get; set; }
 
         public ulong? ServiceId { get; set; }
+        public Service Service { get; set; }
         public ulong? ConfigurationItemId { get; set; }
+        public ConfigurationItem? ConfigurationItem { get; set; }
 
         public ulong RequesterId { get; set; }
         public ulong? RequestedForId { get; set; }

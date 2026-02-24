@@ -23,6 +23,8 @@ namespace ITPortal.Business.Context
         public DbSet<TicketEvent> TicketEvents  => Set<TicketEvent>();
         public DbSet<MajorIncident> MajorIncidents  => Set<MajorIncident>();
         public DbSet<MajorIncidentUpdate> MajorIncidentUpdates  => Set<MajorIncidentUpdate>();
+        public DbSet<Service> Services  => Set<Service>();
+        public DbSet<ConfigurationItem> ConfigurationItems  => Set<ConfigurationItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

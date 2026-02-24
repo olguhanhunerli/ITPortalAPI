@@ -34,6 +34,8 @@ namespace ITPortal.Business.Repository
             .Include(x => x.Category)
             .Include(x => x.Subcategory)
 
+            .Include(x => x.Service)
+            .Include(x => x.ConfigurationItem)
             .Include(x => x.Requester)
             .Include(x => x.RequestedFor)
             .Include(x => x.Assignee)
@@ -63,6 +65,9 @@ namespace ITPortal.Business.Repository
              .Include(x => x.Category)
              .Include(x => x.Subcategory)
 
+            .Include(x => x.Service)
+            .Include(x => x.ConfigurationItem)
+
              .Include(x => x.Requester)
              .Include(x => x.RequestedFor)
              .Include(x => x.Assignee)
@@ -90,6 +95,9 @@ namespace ITPortal.Business.Repository
                 .Include(t => t.Status)
                 .Include(t => t.Priority)
                 .Include(t => t.Requester)
+                .Include(t => t.Service)
+                .Include(x => x.ConfigurationItem)
+
                 .Include(t => t.Assignee);
 
             var totalCount = await query.CountAsync();
@@ -120,6 +128,9 @@ namespace ITPortal.Business.Repository
                 .Include(t => t.Status)
                 .Include(t => t.Priority)
                 .Include(t => t.Requester)
+                .Include(t => t.Service)
+                .Include(x => x.ConfigurationItem)
+
                 .Include(t => t.Assignee);
 
             var totalCount = await query.CountAsync();

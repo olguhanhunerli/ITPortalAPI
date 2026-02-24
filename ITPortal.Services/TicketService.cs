@@ -4,12 +4,6 @@ using ITPortal.Entities.DTOs.TicketDTOs;
 using ITPortal.Entities.Model;
 using ITPortal.Entities.Model.Common;
 using ITPortal.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITPortal.Services
 {
@@ -20,13 +14,15 @@ namespace ITPortal.Services
         private readonly ITicketRepository _ticketRepository;
         private readonly IMapper _mapper;
         private readonly ILookupRepository _lookupRepository;
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository)
+        private readonly ITeamRepository _teamRepository;
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository)
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _ticketCategoryRepository = ticketCategoryRepository;
             _lookupRepository = lookupRepository;
+            _teamRepository = teamRepository;
         }
 
         public async Task<TicketDetailDTO> ComplateTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
@@ -94,7 +90,7 @@ namespace ITPortal.Services
                 StatusId = StatusNewId,
 
                 RequesterId = requesterId,
-                RequestedForId = dto.RequestedForId,
+                RequestedForId = requesterForId,
 
                 DepartmentId = requestedForUser.DepartmentId,
                 LocationId = requestedForUser.LocationId,
@@ -196,6 +192,32 @@ namespace ITPortal.Services
             ticket.ClosedAt = null;
             ticket.ResolvedAt = null;
             ticket.ReopenedCount += 1;
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+
+            var updated = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            return _mapper.Map<TicketDetailDTO>(updated);
+        }
+
+        public async Task<TicketDetailDTO> UpdateTicketAssignment(ulong ticketId, UpdateTicketAssignmentDTO dto, ulong adminId)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null) throw new Exception("Ticket bulunamadı");
+
+            if (!dto.AssigneeId.HasValue)
+                throw new Exception("AssigneeId zorunlu.");
+
+            var assignee = await _userRepository.GetByIdAsync(dto.AssigneeId.Value);
+            if (assignee == null) throw new Exception("Assignee bulunamadı");
+
+            if (!assignee.TeamId.HasValue)
+                throw new Exception("Assignee'nin bir takımı yok. Önce team atayın.");
+
+            ticket.AssigneeId = assignee.Id;
+            ticket.AssignedTeamId = assignee.TeamId.Value;
+
+            ticket.UpdatedAt = DateTime.UtcNow;
 
             _ticketRepository.Update(ticket);
             await _ticketRepository.SaveChangesAsync();

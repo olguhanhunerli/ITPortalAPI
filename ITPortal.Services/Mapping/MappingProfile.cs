@@ -74,8 +74,10 @@ namespace ITPortal.Services.Mapping
                .ForMember(d => d.SubcategoryName, opt => opt.MapFrom(s => s.Subcategory != null ? s.Subcategory.NameTr : null))
                .ForMember(d => d.TypeName, opt => opt.MapFrom(s => s.Type.NameTr))
                .ForMember(d => d.StatusName, opt => opt.MapFrom(s => s.Status.NameTr))
+               .ForMember(d => d.ServiceName, opt => opt.MapFrom(s => s.Service.NameTr))
                .ForMember(d => d.PriorityName, opt => opt.MapFrom(s => s.Priority != null ? s.Priority.NameTr : null))
                .ForMember(d => d.ImpactName, opt => opt.MapFrom(s => s.Impact != null ? s.Impact.NameTr : null))
+               .ForMember(d => d.ConfigurationItemName, opt => opt.MapFrom(s => s.ConfigurationItem.Name != null ? s.ConfigurationItem.NameTr : null))
                .ForMember(d => d.UrgencyName, opt => opt.MapFrom(s => s.Urgency != null ? s.Urgency.NameTr : null))
                .ForMember(d => d.ApprovalStateName, opt => opt.MapFrom(s => s.ApprovalState != null ? s.ApprovalState.NameTr : null))
                .ForMember(d => d.RequesterName, opt => opt.MapFrom(s => s.Requester.FullName))
@@ -93,6 +95,8 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.AssigneeName, opt => opt.MapFrom(s => s.Assignee != null ? s.Assignee.FullName : null))
                 .ForMember(d => d.StatusName, opt => opt.MapFrom(s => s.Status != null ? s.Status.NameTr : null))
                 .ReverseMap();
+            CreateMap<UpdateTicketAssignmentDTO, Ticket>()
+                .ForMember(d => d.AssigneeId, opt => opt.MapFrom(s => s.AssigneeId));
             CreateMap<TicketComment, TicketCommentDTO>()
                 .ForMember(d => d.TicketName, o => o.MapFrom(s => s.Ticket.Title)) 
                 .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.FullName))

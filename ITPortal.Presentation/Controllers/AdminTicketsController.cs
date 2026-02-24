@@ -28,7 +28,6 @@ namespace ITPortal.Presentation.Controllers
             return Ok(result);
         }
 
-        // Admin detail: herhangi bir ticket detayı
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicketById(ulong id)
         {
@@ -46,39 +45,11 @@ namespace ITPortal.Presentation.Controllers
             var result = await _ticketService.CreateTicketAsync(request, CurrentUserId!.Value);
             return Ok(result);
         }
-
-        //[HttpPut("{id:ulong}")]
-        //public async Task<IActionResult> UpdateTicket(ulong id, [FromBody] UpdateTicketAdminDTO request)
-        //{
-        //    EnsureAuthenticated();
-
-        //    var result = await _ticketService.UpdateTicketAdminAsync(
-        //        id,
-        //        request,
-        //        CurrentUserId!.Value
-        //    );
-
-        //    if (result == null)
-        //        return NotFoundMsg("Ticket Bulunamadı");
-
-        //    return Ok(result);
-        //}
-
-        //[HttpPut("{id:ulong}/assign")]
-        //public async Task<IActionResult> AssignTicket(ulong id, [FromBody] AssignTicketDTO request)
-        //{
-        //    EnsureAuthenticated();
-
-        //    var result = await _ticketService.AssignTicketAsync(
-        //        id,
-        //        request,
-        //        CurrentUserId!.Value
-        //    );
-
-        //    if (result == null)
-        //        return NotFoundMsg("Ticket Bulunamadı");
-
-        //    return Ok(result);
-        //}
+        [HttpPut("{id}/assigne")]
+        public async Task<IActionResult> AssignTicket(ulong id, [FromBody] UpdateTicketAssignmentDTO request)
+        {
+            var result = await _ticketService.UpdateTicketAssignment(id, request, CurrentUserId!.Value);
+            return Ok(result);
+        }
     }
 }
