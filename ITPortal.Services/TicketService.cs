@@ -19,13 +19,48 @@ namespace ITPortal.Services
         private readonly ITicketCategoryRepository _ticketCategoryRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IMapper _mapper;
-
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository)
+        private readonly ILookupRepository _lookupRepository;
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository)
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _ticketCategoryRepository = ticketCategoryRepository;
+            _lookupRepository = lookupRepository;
+        }
+
+        public async Task<TicketDetailDTO> ComplateTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null) throw new Exception("Ticket bulunamadı");
+
+            if (ticket.RequesterId != userId)
+                throw new UnauthorizedAccessException("Sadece kendi ticket'ınızı tamamlayabilirsiniz.");
+
+            var statuses = await _lookupRepository.GetLookupsByTypeCodeAsync("TicketStatus", null, 200);
+            var resolved = statuses.FirstOrDefault(x => x.Code == "Resolved");
+
+            if (resolved == null) throw new Exception("Resolved statüsü bulunamadı");
+
+            if (ticket.StatusId == resolved.Id)
+                throw new Exception("Ticket zaten tamamlanmış");
+
+            var now = DateTime.UtcNow;
+          
+            ticket.StatusId = dto.StatusId;
+            ticket.ResolvedAt ??= now;
+            ticket.UpdatedAt = now;
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+
+            var updatedTicket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+
+            if (updatedTicket.StatusId == 13)
+                ticket.ClosedAt = DateTime.UtcNow;
+            _ticketRepository.Update(updatedTicket);
+            await _ticketRepository.SaveChangesAsync();
+            return _mapper.Map<TicketDetailDTO>(updatedTicket);
         }
 
         public async Task<TicketDetailDTO> CreateTicketAsync(CreateTicketDTO dto, ulong requesterId)
@@ -66,7 +101,6 @@ namespace ITPortal.Services
 
                 Title = dto.Title,
                 Description = dto.Description,
-                DetailsJson = dto.DetailsJson,
                 DueAt = dto.DueAt,
 
                 CategoryId = dto.CategoryId,
@@ -136,6 +170,38 @@ namespace ITPortal.Services
                 PageSize = entity.PageSize,
                 Items = _mapper.Map<List<TicketMiniDTO>>(entity.Items)
             };
+        }
+
+        public async Task<TicketDetailDTO> ReopenTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null) throw new Exception("Ticket bulunamadı");
+
+            if (ticket.RequesterId != userId)
+                throw new UnauthorizedAccessException("Sadece kendi ticket'ınızı yeniden açabilirsiniz.");
+
+            var statuses = await _lookupRepository.GetLookupsByTypeCodeAsync("TicketStatus", null, 200);
+
+            var closed = statuses.FirstOrDefault(x => x.Code == "Resolved");
+            if (closed == null) throw new Exception("Closed statüsü bulunamadı");
+
+            if (ticket.StatusId != closed.Id)
+                throw new Exception("Sadece kapatılmış ticket'ları yeniden açabilirsiniz.");
+
+            var reopened = statuses.FirstOrDefault(x => x.Code == "Reopened");
+            if (reopened == null) throw new Exception("Reopened statüsü bulunamadı");
+
+            ticket.StatusId = dto.StatusId;
+            ticket.UpdatedAt = DateTime.UtcNow;
+            ticket.ClosedAt = null;
+            ticket.ResolvedAt = null;
+            ticket.ReopenedCount += 1;
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+
+            var updated = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            return _mapper.Map<TicketDetailDTO>(updated);
         }
     }
 }

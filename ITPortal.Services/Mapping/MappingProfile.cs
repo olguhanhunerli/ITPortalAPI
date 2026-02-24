@@ -94,8 +94,10 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.StatusName, opt => opt.MapFrom(s => s.Status != null ? s.Status.NameTr : null))
                 .ReverseMap();
             CreateMap<TicketComment, TicketCommentDTO>()
-                .ForMember(d => d.AuthorName, opt => opt.MapFrom(s => s.Author.FullName))
-                .ForMember(d => d.VisibilityName, opt => opt.MapFrom(s => s.Visibility.NameTr));
+                .ForMember(d => d.TicketName, o => o.MapFrom(s => s.Ticket.Title)) 
+                .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.FullName))
+                .ForMember(d => d.VisibilityName, o => o.MapFrom(s => s.Visibility.NameTr));
+            CreateMap<CreateCommentDTO, TicketComment>();
 
             CreateMap<TicketEvent, TicketEventDTO>()
                 .ForMember(d => d.ActorName, opt => opt.MapFrom(s => s.Actor != null ? s.Actor.FullName : null));

@@ -28,7 +28,6 @@ namespace ITPortal.Entities.DTOs.TicketDTOs
         public ulong? UrgencyId { get; set; }
         public ulong? ApprovalStateId { get; set; }
 
-        // Lookups (Names)
         public string TypeName { get; set; } = null!;
         public string StatusName { get; set; } = null!;
         public string? PriorityName { get; set; }
@@ -36,7 +35,6 @@ namespace ITPortal.Entities.DTOs.TicketDTOs
         public string? UrgencyName { get; set; }
         public string? ApprovalStateName { get; set; }
 
-        // Category / Service / CI
         public ulong? CategoryId { get; set; }
         public ulong? SubcategoryId { get; set; }
         public string? CategoryName { get; set; }
@@ -48,13 +46,11 @@ namespace ITPortal.Entities.DTOs.TicketDTOs
         public ulong? ConfigurationItemId { get; set; }
         public string? ConfigurationItemName { get; set; }
 
-        // People / Team (Ids)
         public ulong RequesterId { get; set; }
         public ulong? RequestedForId { get; set; }
         public ulong? AssigneeId { get; set; }
         public ulong? AssignedTeamId { get; set; }
 
-        // People / Team (Names)
         public string RequesterName { get; set; } = null!;
         public string? RequestedForName { get; set; }
         public string? AssigneeName { get; set; }

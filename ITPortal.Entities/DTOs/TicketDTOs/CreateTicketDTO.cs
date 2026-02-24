@@ -17,7 +17,6 @@ namespace ITPortal.Entities.DTOs.TicketDTOs
         public ulong? ServiceId { get; set; }
         public ulong? ConfigurationItemId { get; set; }
         public ulong? RequestedForId { get; set; }
-        public string? DetailsJson { get; set; }
         public DateTime? DueAt { get; set; }
     }
 }
