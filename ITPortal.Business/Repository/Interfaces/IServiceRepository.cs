@@ -14,6 +14,6 @@ namespace ITPortal.Business.Repository.Interfaces
     {
         Task<PagedResultDTO<ServiceMiniDTO>> GetAllServiceAsync(int pageNumber, int pageSize);
         Task<Service> GetByServiceIdAsync(ulong serviceId);
-        Task<ServiceLookupDTO> GetServiceLookupAsync();
+        Task<List<ServiceLookupDTO>> GetServiceLookupAsync();
     }
 }

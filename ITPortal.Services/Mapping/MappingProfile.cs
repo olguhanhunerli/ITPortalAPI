@@ -4,6 +4,7 @@ using ITPortal.Entities.DTOs.LocationDTOs;
 using ITPortal.Entities.DTOs.LookupDTOs;
 using ITPortal.Entities.DTOs.MajorIncidentDTOs;
 using ITPortal.Entities.DTOs.RoleDTOs;
+using ITPortal.Entities.DTOs.ServiceDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
 using ITPortal.Entities.DTOs.TicketCategoryDTOs;
 using ITPortal.Entities.DTOs.TicketCommentDTOs;
@@ -109,6 +110,14 @@ namespace ITPortal.Services.Mapping
             CreateMap<MajorIncident, MajorIncidentSummaryDTO>()
                 .ForMember(d => d.StatusName, opt => opt.MapFrom(s => s.Status.NameTr))
                 .ForMember(d => d.LeadName, opt => opt.MapFrom(s => s.Lead.FullName));
+
+            CreateMap<Service, ServiceDetailDTO>()
+                .ForMember(d => d.OwnerTeamName, opt => opt.MapFrom(s => s.OwnerTeam != null ? s.OwnerTeam.Name : null)).ReverseMap();
+            CreateMap<ServiceDetailDTO, Service>().ReverseMap();
+            CreateMap<ServiceMiniDTO, Service>().ReverseMap();
+            CreateMap<CreateServiceDTO, Service>().ReverseMap();
+            CreateMap<UpdateServiceDTO, Service>().ReverseMap();
+            CreateMap<ServiceLookupDTO, Service>().ReverseMap();
         }
     }
 }

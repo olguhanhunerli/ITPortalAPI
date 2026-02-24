@@ -1,4 +1,5 @@
-﻿using ITPortal.Business.Repository.GenericRepository;
+﻿using ITPortal.Business.Context;
+using ITPortal.Business.Repository.GenericRepository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.ServiceDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
@@ -16,7 +17,7 @@ namespace ITPortal.Business.Repository
 {
     public class ServiceRepository : GenericRepository<Service, ulong>, IServiceRepository
     {
-        public ServiceRepository(DbContext context, IHttpContextAccessor http) : base(context, http)
+        public ServiceRepository(AppDbContext context, IHttpContextAccessor http) : base(context, http)
         {
         }
 
@@ -31,6 +32,7 @@ namespace ITPortal.Business.Repository
             var totalCount = await query.CountAsync();
 
             var items = await query
+                .Where(x=> x.IsActive == true)
                 .OrderBy(t => t.Name)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -57,19 +59,22 @@ namespace ITPortal.Business.Repository
         public async Task<Service> GetByServiceIdAsync(ulong serviceId)
         {
             return await _set
+                .Where(x => x.Id == serviceId && x.IsActive == true)
                 .Include(s => s.OwnerTeam)
                 .FirstOrDefaultAsync(s => s.Id == serviceId);
         }
 
-        public async Task<ServiceLookupDTO> GetServiceLookupAsync()
+        public async Task<List<ServiceLookupDTO>> GetServiceLookupAsync()
         {
             return await _set.AsNoTracking()
+                .Where(x => x.IsActive == true)
                 .Select(s => new ServiceLookupDTO
                 {
                     Id = s.Id,
-                    Name = s.Name
+                    Name = s.Name,
+                    NameTr = s.NameTr
                 })
-                .FirstOrDefaultAsync();
+                .ToListAsync();
         }
     }
 }
