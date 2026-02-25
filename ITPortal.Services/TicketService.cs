@@ -15,7 +15,8 @@ namespace ITPortal.Services
         private readonly IMapper _mapper;
         private readonly ILookupRepository _lookupRepository;
         private readonly ITeamRepository _teamRepository;
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository)
+        private readonly IConfigurationItemsRepository _configurationItemsRepository;
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository, IConfigurationItemsRepository configurationItemsRepository)
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
@@ -23,6 +24,7 @@ namespace ITPortal.Services
             _ticketCategoryRepository = ticketCategoryRepository;
             _lookupRepository = lookupRepository;
             _teamRepository = teamRepository;
+            _configurationItemsRepository = configurationItemsRepository;
         }
 
         public async Task<TicketDetailDTO> ComplateTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
@@ -66,7 +68,11 @@ namespace ITPortal.Services
             var requestedForUser = await _userRepository.GetByIdAsync(requesterForId);
             if (requestedForUser == null)
                 throw new Exception("User Bulunamadı");
-
+            if (dto.ConfigurationItemId.HasValue)
+            {
+                var ok = await _configurationItemsRepository.IsConfigurationItemOwnedByUserAsync(dto.ConfigurationItemId.Value, requesterForId);
+                if (!ok) throw new Exception("Configuration Item bu kullanıcıya ait değil / bulunamadı.");
+            }
             ulong? assignedTeamId = null;
 
             if (dto.SubcategoryId.HasValue)

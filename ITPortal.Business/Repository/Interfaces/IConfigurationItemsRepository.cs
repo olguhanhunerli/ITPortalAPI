@@ -16,5 +16,6 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<ConfigurationItem> GetConfigurationItemByIdAsync(ulong id);
         Task<List<ConfigurationItemLookupDTO>> GetConfigurationItemLookupAsync(string? search, int take);
         Task<ConfigurationItem> GetConfigurationItemByIdForUpdateAsync(ulong id);
+        Task<bool> IsConfigurationItemOwnedByUserAsync(ulong configurationItemId, ulong userId);
     }
 }

@@ -99,5 +99,13 @@ namespace ITPortal.Business.Repository
                     .Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync()
             };
         }
+
+        public Task<bool> IsConfigurationItemOwnedByUserAsync(ulong configurationItemId, ulong userId)
+        {
+            return _set.AsNoTracking().AnyAsync(ci =>
+                ci.Id == configurationItemId &&
+                ci.DeletedAt == null &&
+                ci.OwnerUserId == userId);
+        }
     }
 }
