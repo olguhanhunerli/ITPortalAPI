@@ -12,5 +12,6 @@ namespace ITPortal.Business.Repository.Interfaces
     public interface ITicketEventRepository : IGenericRepository<TicketEvent, ulong>
     {
         Task<PagedResultDTO<TicketEvent>> GetTicketEventAsync(int pageNumber, int pageSize);
+        Task<List<TicketEvent>> GetTicketEventByIdAsync(ulong ticketId);
     }
 }

@@ -5,11 +5,6 @@ using ITPortal.Entities.Model;
 using ITPortal.Entities.Model.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITPortal.Business.Repository
 {
@@ -45,6 +40,16 @@ namespace ITPortal.Business.Repository
                     .Take(pageSize)
                     .ToListAsync()
             };
+        }
+
+        public Task<List<TicketEvent>> GetTicketEventByIdAsync(ulong ticketId)
+        {
+            return _set
+                 .AsNoTracking()
+                 .Where(x => x.TicketId == ticketId)
+                 .Include(x => x.Actor)
+                 .Include(x => x.Ticket)
+                 .ToListAsync();
         }
     }
 }

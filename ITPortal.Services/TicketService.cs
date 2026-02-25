@@ -18,7 +18,8 @@ namespace ITPortal.Services
         private readonly ITeamRepository _teamRepository;
         private readonly IConfigurationItemsRepository _configurationItemsRepository;
         private readonly ITicketEventRepository _ticketEventRepository;
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository, IConfigurationItemsRepository configurationItemsRepository, ITicketEventRepository ticketEventRepository)
+        private readonly ITicketAssignmentHistoryRepository _ticketAssignmentHistoryRepository;
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository, IConfigurationItemsRepository configurationItemsRepository, ITicketEventRepository ticketEventRepository, ITicketAssignmentHistoryRepository ticketAssignmentHistoryRepository)
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
@@ -28,6 +29,7 @@ namespace ITPortal.Services
             _teamRepository = teamRepository;
             _configurationItemsRepository = configurationItemsRepository;
             _ticketEventRepository = ticketEventRepository;
+            _ticketAssignmentHistoryRepository = ticketAssignmentHistoryRepository;
         }
 
         public async Task<TicketDetailDTO> ComplateTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
@@ -260,7 +262,8 @@ namespace ITPortal.Services
 
             if (!assignee.TeamId.HasValue)
                 throw new Exception("Assignee'nin bir takımı yok. Önce team atayın.");
-
+            var oldAssigneeId = ticket.Assignee.Id;
+            var oldTeamId = ticket.Assignee.Team.Id;
             ticket.AssigneeId = assignee.Id;
             ticket.AssignedTeamId = assignee.TeamId.Value;
 
@@ -281,7 +284,18 @@ namespace ITPortal.Services
                 CreatedAt = DateTime.UtcNow
             });
             await _ticketEventRepository.SaveChangesAsync();
-
+            await _ticketAssignmentHistoryRepository.AddAsync(new TicketAssignmentHistory
+            {
+                TicketId = ticket.Id,
+                NewAssigneeId = assignee.Id,
+                OldAssigneeId = oldAssigneeId,
+                NewTeamId = assignee.TeamId.Value,
+                OldTeamId = oldTeamId,
+                ChangeTypeId = ticket.Status.Id,
+                ChangedById = ticket.Assignee.Id,
+                ChangedAt = DateTime.UtcNow
+            });
+            await _ticketAssignmentHistoryRepository.SaveChangesAsync();
             var updated = await _ticketRepository.GetByTicketIdAsync(ticketId);
             return _mapper.Map<TicketDetailDTO>(updated);
         }

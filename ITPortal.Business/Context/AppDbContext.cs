@@ -25,6 +25,7 @@ namespace ITPortal.Business.Context
         public DbSet<MajorIncidentUpdate> MajorIncidentUpdates  => Set<MajorIncidentUpdate>();
         public DbSet<Service> Services  => Set<Service>();
         public DbSet<ConfigurationItem> ConfigurationItems  => Set<ConfigurationItem>();
+        public DbSet<TicketAssignmentHistory> TicketAssignmentHistory => Set<TicketAssignmentHistory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

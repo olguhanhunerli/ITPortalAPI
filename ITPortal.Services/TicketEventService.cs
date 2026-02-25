@@ -15,13 +15,15 @@ namespace ITPortal.Services
 {
     public class TicketEventService : ITicketEventService
     {
+        private readonly ITicketRepository _ticketRepository;
         private readonly ITicketEventRepository _ticketEventRepository;
         private readonly IMapper _mapper;
 
-        public TicketEventService(ITicketEventRepository ticketEventRepository, IMapper mapper)
+        public TicketEventService(ITicketEventRepository ticketEventRepository, IMapper mapper, ITicketRepository ticketRepository)
         {
             _ticketEventRepository = ticketEventRepository;
             _mapper = mapper;
+            _ticketRepository = ticketRepository;
         }
 
         public async Task<PagedResultDTO<TicketEventDTO>> GetTicketEvent(int page, int pageSize)
@@ -36,6 +38,16 @@ namespace ITPortal.Services
                 PageSize = pagedEvents.PageSize,
                 Items = mappedEvents
             };
+        }
+
+        public async Task<List<TicketEventDTO>> GetTicketEventById(ulong ticketId)
+        {
+            var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+            if (ticket == null)
+                throw new KeyNotFoundException($"Ticket with ID {ticketId} not found.");
+
+            var events = await _ticketEventRepository.GetTicketEventByIdAsync(ticketId);
+            return _mapper.Map<List<TicketEventDTO>>(events);
         }
     }
 }

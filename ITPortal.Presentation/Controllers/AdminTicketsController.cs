@@ -3,11 +3,6 @@ using ITPortal.Presentation.Authorization;
 using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITPortal.Presentation.Controllers
 {
@@ -17,11 +12,12 @@ namespace ITPortal.Presentation.Controllers
     {
         private readonly ITicketService _ticketService;
         private readonly ITicketEventService _ticketEventService;
-
-        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService)
+        private readonly ITicketAssignmentHistoryService _ticketAssignmentHistoryService;
+        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService, ITicketAssignmentHistoryService ticketAssignmentHistoryService)
         {
             _ticketService = ticketService;
             _ticketEventService = ticketEventService;
+            _ticketAssignmentHistoryService = ticketAssignmentHistoryService;
         }
         [HttpGet]
         public async Task<IActionResult> GetTicketsPage(int pageNumber = 1, int pageSize = 10)
@@ -57,6 +53,24 @@ namespace ITPortal.Presentation.Controllers
         public async Task<IActionResult> GetTicketEvents(int page = 1, int pageSize = 10)
         {
             var result = await _ticketEventService.GetTicketEvent(page, pageSize);
+            return Ok(result);
+        }
+        [HttpGet("/events")]
+        public async Task<IActionResult> GetTicketEventsById(ulong ticketId)
+        {
+            var result = await _ticketEventService.GetTicketEventById(ticketId);
+            return Ok(result);
+        }
+        [HttpGet("assignment-history")]
+        public async Task<IActionResult> GetTicketAssignmentHistory(int page = 1, int pageSize = 10)
+        {
+            var result = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryAllAsync(page, pageSize);
+            return Ok(result);
+        }
+        [HttpGet("/assignment-history")]
+        public async Task<IActionResult> GetTicketAssignmentHistoryByTicketId(ulong ticketId)
+        {
+            var result = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryByTicketIdAsync(ticketId);
             return Ok(result);
         }
     }

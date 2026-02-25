@@ -7,6 +7,7 @@ using ITPortal.Entities.DTOs.MajorIncidentDTOs;
 using ITPortal.Entities.DTOs.RoleDTOs;
 using ITPortal.Entities.DTOs.ServiceDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
+using ITPortal.Entities.DTOs.TicketAssignmentHistoryDTOs;
 using ITPortal.Entities.DTOs.TicketCategoryDTOs;
 using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.DTOs.TicketDTOs;
@@ -138,6 +139,17 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null)).ReverseMap();
             CreateMap<CreateConfigurationItemDTO, ConfigurationItem>().ReverseMap();
             CreateMap<UpdateConfigurationItemDTO, ConfigurationItem>().ReverseMap();
+
+            CreateMap<TicketAssignmentHistory, TicketAssignmentHistoryDetailDTO>()
+                .ForMember(d => d.TicketNumber, opt => opt.MapFrom(s => s.Ticket != null ? s.Ticket.TicketNumber : null))
+                .ForMember(d => d.NewAssigneeName, opt => opt.MapFrom(s => s.NewAssignee != null ? s.NewAssignee.FullName : null))
+                .ForMember(d => d.OldAssigneeName, opt => opt.MapFrom(opt => opt.OldAssignee != null ? opt.OldAssignee.FullName : null))
+                .ForMember(d => d.NewTeamName, opt => opt.MapFrom(s => s.NewTeam != null ? s.NewTeam.FullName : null))
+                .ForMember(d => d.OldTeamName, opt => opt.MapFrom(s => s.OldTeam != null ? s.OldTeam.FullName : null))
+                .ForMember(d => d.ChangedByName, opt => opt.MapFrom(s => s.ChangedBy != null ? s.ChangedBy.FullName : null))
+                .ForMember(d => d.ChangeTypeName, opt => opt.MapFrom(s => s.ChangeType != null ? s.ChangeType.NameTr : null)).ReverseMap();
+
+
         }
     }
 }

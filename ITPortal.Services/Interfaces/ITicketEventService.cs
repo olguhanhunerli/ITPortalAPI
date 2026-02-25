@@ -11,5 +11,6 @@ namespace ITPortal.Services.Interfaces
     public interface ITicketEventService
     {
         Task<PagedResultDTO<TicketEventDTO>>GetTicketEvent(int page, int pageSize);
+        Task<List<TicketEventDTO>> GetTicketEventById(ulong ticketId);
     }
 }
