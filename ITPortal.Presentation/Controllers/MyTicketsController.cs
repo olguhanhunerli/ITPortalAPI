@@ -78,5 +78,17 @@ namespace ITPortal.Presentation.Controllers
 
             return Ok(result);
         }
+        [Authorize(Roles = RoleGroups.PortalUsers)]
+        [HttpGet("{ticketId}/attachments/{attachmentId}/download")]
+        public async Task<IActionResult> Download(ulong ticketId,ulong attachmentId)
+        {
+            var result = await _ticketAttachmentService
+                .DownloadTicketAttachmentForUserAsync(
+                    ticketId,
+                    attachmentId,
+                    CurrentUserId!.Value);
+
+            return File(result.Content, result.ContentType, result.FileName);
+        }
     }
 }

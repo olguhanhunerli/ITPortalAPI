@@ -11,5 +11,7 @@ namespace ITPortal.Services.Interfaces
     {
         Task<TicketAttachmentMiniDTO> GetTicketAttachmentMini(ulong ticketId);
         Task<TicketAttachmentMiniDTO> CreateTicketAttachmentAsyn(ulong ticketId, CreateTicketAttachmentDTO dto, ulong uploadedBy, CancellationToken ct = default);
+        Task<(byte[] Content, string ContentType, string FileName)> DownloadTicketAttachmentAsync(ulong ticketId, ulong attachmentId);
+        Task<(byte[] Content, string ContentType, string FileName)> DownloadTicketAttachmentForUserAsync(ulong ticketId, ulong attachmentId, ulong currentUserId);
     }
 }

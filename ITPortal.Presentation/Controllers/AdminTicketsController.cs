@@ -85,5 +85,13 @@ namespace ITPortal.Presentation.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{ticketId}/attachments/{attachmentId}/download")]
+        public async Task<IActionResult> Download( ulong ticketId,ulong attachmentId)
+        {
+            var result = await _ticketAttachmentService
+                .DownloadTicketAttachmentAsync(ticketId, attachmentId);
+
+            return File(result.Content, result.ContentType, result.FileName);
+        }
     }
 }

@@ -96,5 +96,59 @@ namespace ITPortal.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<(byte[] Content, string ContentType, string FileName)> DownloadTicketAttachmentAsync(ulong ticketId, ulong attachmentId)
+        {
+            var attachment = await _ticketAttachmentRepository.FirstOrDefaultAsync( x => x.Id == attachmentId && x.TicketId == ticketId && x.DeletedAt == null);
+
+            if (attachment == null)
+                throw new Exception("Attachment bulunamadı.");
+
+            var absolutePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                attachment.StoragePath);
+
+            if (!File.Exists(absolutePath))
+                throw new Exception("Dosya fiziksel olarak bulunamadı.");
+
+            var bytes = await File.ReadAllBytesAsync(absolutePath);
+
+            return (bytes, attachment.ContentType, attachment.FileName);
+        }
+
+        public async Task<(byte[] Content, string ContentType, string FileName)> DownloadTicketAttachmentForUserAsync(ulong ticketId, ulong attachmentId, ulong currentUserId)
+        {
+            var ticket = await _ticketRepository.FirstOrDefaultAsync(x => x.Id == ticketId);
+
+            if (ticket == null)
+                throw new Exception("Ticket bulunamadı.");
+
+            var hasAccess =
+                ticket.RequestedForId == currentUserId ||
+                ticket.AssigneeId == currentUserId;
+
+
+            if (!hasAccess)
+                throw new UnauthorizedAccessException("Bu ticket'a erişim yetkiniz yok.");
+
+            var attachment = await _ticketAttachmentRepository.FirstOrDefaultAsync(
+                    x => x.Id == attachmentId &&
+                         x.TicketId == ticketId &&
+                         x.DeletedAt == null);
+
+            if (attachment == null)
+                throw new Exception("Attachment bulunamadı.");
+
+            var absolutePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                attachment.StoragePath);
+
+            if (!File.Exists(absolutePath))
+                throw new Exception("Dosya bulunamadı.");
+
+            var bytes = await File.ReadAllBytesAsync(absolutePath);
+
+            return (bytes, attachment.ContentType, attachment.FileName);
+        }
     }
 }

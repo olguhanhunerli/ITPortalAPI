@@ -19,7 +19,7 @@ namespace ITPortal.Entities.Model
         public ulong StorageProviderId { get; set; }
         public Lookup? StorageProvider { get; set; }
         public string StoragePath{ get; set; }
-        public string ChecksumSha256 { get; set; }
+        public string? ChecksumSha256 { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
     }
