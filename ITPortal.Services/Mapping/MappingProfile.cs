@@ -144,8 +144,8 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.TicketNumber, opt => opt.MapFrom(s => s.Ticket != null ? s.Ticket.TicketNumber : null))
                 .ForMember(d => d.NewAssigneeName, opt => opt.MapFrom(s => s.NewAssignee != null ? s.NewAssignee.FullName : null))
                 .ForMember(d => d.OldAssigneeName, opt => opt.MapFrom(opt => opt.OldAssignee != null ? opt.OldAssignee.FullName : null))
-                .ForMember(d => d.NewTeamName, opt => opt.MapFrom(s => s.NewTeam != null ? s.NewTeam.FullName : null))
-                .ForMember(d => d.OldTeamName, opt => opt.MapFrom(s => s.OldTeam != null ? s.OldTeam.FullName : null))
+                .ForMember(d => d.NewTeamName, opt => opt.MapFrom(s => s.NewTeam != null ? s.NewTeam.Name : null))
+                .ForMember(d => d.OldTeamName, opt => opt.MapFrom(s => s.OldTeam != null ? s.OldTeam.Name : null))
                 .ForMember(d => d.ChangedByName, opt => opt.MapFrom(s => s.ChangedBy != null ? s.ChangedBy.FullName : null))
                 .ForMember(d => d.ChangeTypeName, opt => opt.MapFrom(s => s.ChangeType != null ? s.ChangeType.NameTr : null)).ReverseMap();
 

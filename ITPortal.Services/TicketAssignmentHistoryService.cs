@@ -38,7 +38,6 @@ namespace ITPortal.Services
             var ticket = await _ticketRepository.GetByIdAsync(ticketId);
             if (ticket == null) throw new Exception("Ticket Bulunamadı");
             var events = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryByIdAsync(ticket.Id);
-            if (events == null) throw new Exception("Tickete Ait History Bulunamadı.");
             return _mapper.Map<List<TicketAssignmentHistoryDetailDTO>>(events);
         }
     }

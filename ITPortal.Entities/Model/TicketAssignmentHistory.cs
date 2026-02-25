@@ -21,8 +21,8 @@ namespace ITPortal.Entities.Model
         public Lookup ChangeType { get; set; }
         public User OldAssignee { get; set; }
         public User NewAssignee { get; set; }
-        public User OldTeam { get; set; }
-        public User NewTeam { get; set; }
+        public Team OldTeam { get; set; }
+        public Team NewTeam { get; set; }
         public User ChangedBy { get; set; }
     }
 }

@@ -55,7 +55,7 @@ namespace ITPortal.Presentation.Controllers
             var result = await _ticketEventService.GetTicketEvent(page, pageSize);
             return Ok(result);
         }
-        [HttpGet("/events")]
+        [HttpGet("{ticketId}/events")]
         public async Task<IActionResult> GetTicketEventsById(ulong ticketId)
         {
             var result = await _ticketEventService.GetTicketEventById(ticketId);
@@ -67,7 +67,7 @@ namespace ITPortal.Presentation.Controllers
             var result = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryAllAsync(page, pageSize);
             return Ok(result);
         }
-        [HttpGet("/assignment-history")]
+        [HttpGet("{ticketId}/assignment-history")]
         public async Task<IActionResult> GetTicketAssignmentHistoryByTicketId(ulong ticketId)
         {
             var result = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryByTicketIdAsync(ticketId);
