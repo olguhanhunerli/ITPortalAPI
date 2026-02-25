@@ -56,7 +56,7 @@ namespace ITPortal.Presentation.Controllers
             }
             return Ok(updatedService);
         }
-        [HttpPatch("{serviceId:ulong}/toggle-active")]
+        [HttpPatch("{serviceId}/toggle-active")]
         [Authorize(Roles = RoleGroups.MasterDataWrite)]
         public async Task<IActionResult> ToggleActive([FromRoute] ulong serviceId)
         {

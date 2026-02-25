@@ -27,6 +27,18 @@ namespace ITPortal.Business.Repository
                 .FirstOrDefaultAsync(u => u.Email == email && u.DeletedAt == null);
         }
 
+        public Task<User?> GetUserByIdWithDetailsAsync(ulong id)
+        {
+            return _set
+               .AsNoTracking()
+               .Include(u => u.Department)
+               .Include(u => u.Location)
+               .Include(u => u.Team)
+               .Include(u => u.UserRoles)
+                 .ThenInclude(ur => ur.Role)
+               .FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt == null);
+        }
+
         public Task<List<UserLookUpDTO>> GetUserLookUpAsync(string? search, int take)
         {
             if (take <= 0) take = 10;

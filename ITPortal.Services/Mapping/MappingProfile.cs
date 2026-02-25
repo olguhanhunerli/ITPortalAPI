@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ITPortal.Entities.DTOs.ConfigurationItemDTOs;
 using ITPortal.Entities.DTOs.DepartmentDTOs;
 using ITPortal.Entities.DTOs.LocationDTOs;
 using ITPortal.Entities.DTOs.LookupDTOs;
@@ -118,6 +119,24 @@ namespace ITPortal.Services.Mapping
             CreateMap<CreateServiceDTO, Service>().ReverseMap();
             CreateMap<UpdateServiceDTO, Service>().ReverseMap();
             CreateMap<ServiceLookupDTO, Service>().ReverseMap();
+
+            CreateMap<ConfigurationItem, ConfigurationItemDetailDTO>()
+                .ForMember(d => d.CiStatusName, opt => opt.MapFrom(s => s.CiStatus != null ? s.CiStatus.NameTr : null))
+                .ForMember(d => d.OwnerUserName, opt => opt.MapFrom(s => s.OwnerUser != null ? s.OwnerUser.FullName : null))
+                .ForMember(d => d.CiTypeName, opt => opt.MapFrom(s => s.CiType != null ? s.CiType.NameTr : null))
+                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null)).ReverseMap();
+            CreateMap<ConfigurationItem, ConfigurationItemMiniDTO>()
+                .ForMember(d => d.CiStatusName, opt => opt.MapFrom(s => s.CiStatus != null ? s.CiStatus.NameTr : null))
+                .ForMember(d => d.OwnerUserName, opt => opt.MapFrom(s => s.OwnerUser != null ? s.OwnerUser.FullName : null))
+                .ForMember(d => d.CiTypeName, opt => opt.MapFrom(s => s.CiType != null ? s.CiType.NameTr : null))
+                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null)).ReverseMap();
+            CreateMap<ConfigurationItem, ConfigurationItemLookupDTO>()
+                .ForMember(d => d.CiStatusName, opt => opt.MapFrom(s => s.CiStatus != null ? s.CiStatus.NameTr : null))
+                .ForMember(d => d.OwnerUserName, opt => opt.MapFrom(s => s.OwnerUser != null ? s.OwnerUser.FullName : null))
+                .ForMember(d => d.CiTypeName, opt => opt.MapFrom(s => s.CiType != null ? s.CiType.NameTr : null))
+                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null)).ReverseMap();
+            CreateMap<CreateConfigurationItemDTO, ConfigurationItem>().ReverseMap();
+            CreateMap<UpdateConfigurationItemDTO, ConfigurationItem>().ReverseMap();
         }
     }
 }

@@ -62,6 +62,9 @@ namespace ITPortalAPI.Extensions
             services.AddScoped(typeof(IServiceRepository), typeof(ServiceRepository));
             services.AddScoped<IServiceService, ServiceService>();
 
+            services.AddScoped(typeof(IConfigurationItemsRepository), typeof(ConfigurationItemsRepository));
+            services.AddScoped<IConfigurationItemService, ConfigurationItemService>();
+
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IAuthService, AuthService>();

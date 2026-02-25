@@ -15,5 +15,6 @@ namespace ITPortal.Business.Repository.Interfaces
         Task<PagedResultDTO<User>> GetUsersWithPaginationAsync(int pageNumber, int pageSize);
         Task<User?> GetUserByEmailWithDetailsAsync(string email);
         Task<List<UserLookUpDTO>> GetUserLookUpAsync(string? search, int take);
+        Task<User?> GetUserByIdWithDetailsAsync(ulong id);
     }
 }
