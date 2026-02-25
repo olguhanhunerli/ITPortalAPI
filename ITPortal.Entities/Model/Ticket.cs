@@ -71,5 +71,6 @@ namespace ITPortal.Entities.Model
 
         public ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>();
         public ICollection<TicketEvent> Events { get; set; } = new List<TicketEvent>();
+        public ICollection<TicketAttachment> Attachments { get; set; } = new List<TicketAttachment>();
     }
 }

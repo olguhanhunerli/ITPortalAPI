@@ -43,7 +43,7 @@ namespace ITPortal.Business.Repository
 
             .Include(x => x.Department)
             .Include(x => x.Location)
-
+            .Include(x => x.Attachments)
             .Include(x => x.Comments)
             .Include(x => x.Events);
 
@@ -75,6 +75,7 @@ namespace ITPortal.Business.Repository
 
              .Include(x => x.Department)
              .Include(x => x.Location)
+             .Include(x => x.Attachments)
 
              .Include(x => x.Comments)
              .Include(x => x.Events)

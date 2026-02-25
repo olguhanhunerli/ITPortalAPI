@@ -1,6 +1,8 @@
-﻿using ITPortal.Entities.DTOs.TicketCommentDTOs;
+﻿using ITPortal.Entities.DTOs.TicketAttachmentDTOs;
+using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.DTOs.TicketDTOs;
 using ITPortal.Presentation.Authorization;
+using ITPortal.Services;
 using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,13 @@ namespace ITPortal.Presentation.Controllers
     {
         private readonly ITicketService _ticketService;
         private readonly ITicketCommentService _ticketCommentService;
+        private readonly ITicketAttachmentService _ticketAttachmentService;
 
-        public MyTicketsController(ITicketService ticketService, ITicketCommentService ticketCommentService)
+        public MyTicketsController(ITicketService ticketService, ITicketCommentService ticketCommentService, ITicketAttachmentService ticketAttachmentService)
         {
             _ticketService = ticketService;
             _ticketCommentService = ticketCommentService;
+            _ticketAttachmentService = ticketAttachmentService;
         }
         [HttpGet]
         [Authorize(Roles = RoleGroups.PortalUsers)]
@@ -64,6 +68,14 @@ namespace ITPortal.Presentation.Controllers
         public async Task<IActionResult> ReopenTicket(ulong ticketId, [FromForm] UpdateStatuTicketDTO dto)
         {
             var result = await _ticketService.ReopenTicketByIdAsync(ticketId, CurrentUserId!.Value, dto);
+            return Ok(result);
+        }
+        [HttpPost("{ticketId}/attachments")]
+        public async Task<IActionResult> Upload(ulong ticketId, [FromForm] CreateTicketAttachmentDTO dto)
+        {
+            var result = await _ticketAttachmentService.CreateTicketAttachmentAsyn(
+                ticketId, dto, CurrentUserId!.Value);
+
             return Ok(result);
         }
     }

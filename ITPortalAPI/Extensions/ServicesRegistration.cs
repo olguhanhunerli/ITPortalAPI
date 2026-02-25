@@ -73,6 +73,9 @@ namespace ITPortalAPI.Extensions
             services.AddScoped(typeof(ITicketAssignmentHistoryRepository), typeof(TicketAssignmentHistoryRepository));
             services.AddScoped<ITicketAssignmentHistoryService, TicketAssignmentHistoryService>();
 
+            services.AddScoped(typeof(ITicketAttachmentRepository), typeof(TicketAttachmentRepository));
+            services.AddScoped<ITicketAttachmentService, TicketAttachmentService>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
 

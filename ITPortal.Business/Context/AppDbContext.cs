@@ -26,6 +26,7 @@ namespace ITPortal.Business.Context
         public DbSet<Service> Services  => Set<Service>();
         public DbSet<ConfigurationItem> ConfigurationItems  => Set<ConfigurationItem>();
         public DbSet<TicketAssignmentHistory> TicketAssignmentHistory => Set<TicketAssignmentHistory>();
+        public DbSet<TicketAttachment> TicketAttachments => Set<TicketAttachment>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

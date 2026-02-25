@@ -8,6 +8,7 @@ using ITPortal.Entities.DTOs.RoleDTOs;
 using ITPortal.Entities.DTOs.ServiceDTOs;
 using ITPortal.Entities.DTOs.TeamDTOs;
 using ITPortal.Entities.DTOs.TicketAssignmentHistoryDTOs;
+using ITPortal.Entities.DTOs.TicketAttachmentDTOs;
 using ITPortal.Entities.DTOs.TicketCategoryDTOs;
 using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.DTOs.TicketDTOs;
@@ -90,7 +91,8 @@ namespace ITPortal.Services.Mapping
                .ForMember(d => d.DepartmentName, opt => opt.MapFrom(s => s.Department != null ? s.Department.Name : null))
                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null))
                .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments))
-               .ForMember(d => d.Events, opt => opt.MapFrom(s => s.Events));
+               .ForMember(d => d.Events, opt => opt.MapFrom(s => s.Events))
+               .ForMember(d=> d.Attachments, opt => opt.MapFrom(s => s.Attachments));
             CreateMap<CreateTicketDTO, Ticket>();
             CreateMap<Ticket, TicketMiniDTO>()
                 .ForMember(d => d.PriorityName, opt => opt.MapFrom(s => s.Priority != null ? s.Priority.NameTr : null))
@@ -148,7 +150,7 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.OldTeamName, opt => opt.MapFrom(s => s.OldTeam != null ? s.OldTeam.Name : null))
                 .ForMember(d => d.ChangedByName, opt => opt.MapFrom(s => s.ChangedBy != null ? s.ChangedBy.FullName : null))
                 .ForMember(d => d.ChangeTypeName, opt => opt.MapFrom(s => s.ChangeType != null ? s.ChangeType.NameTr : null)).ReverseMap();
-
+            CreateMap<TicketAttachment, TicketAttachmentMiniDTO>();
 
         }
     }

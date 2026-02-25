@@ -1,5 +1,7 @@
-﻿using ITPortal.Entities.DTOs.TicketDTOs;
+﻿using ITPortal.Entities.DTOs.TicketAttachmentDTOs;
+using ITPortal.Entities.DTOs.TicketDTOs;
 using ITPortal.Presentation.Authorization;
+using ITPortal.Services;
 using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,13 @@ namespace ITPortal.Presentation.Controllers
         private readonly ITicketService _ticketService;
         private readonly ITicketEventService _ticketEventService;
         private readonly ITicketAssignmentHistoryService _ticketAssignmentHistoryService;
-        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService, ITicketAssignmentHistoryService ticketAssignmentHistoryService)
+        private readonly ITicketAttachmentService _ticketAttachmentService;
+        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService, ITicketAssignmentHistoryService ticketAssignmentHistoryService, ITicketAttachmentService ticketAttachmentService)
         {
             _ticketService = ticketService;
             _ticketEventService = ticketEventService;
             _ticketAssignmentHistoryService = ticketAssignmentHistoryService;
+            _ticketAttachmentService = ticketAttachmentService;
         }
         [HttpGet]
         public async Task<IActionResult> GetTicketsPage(int pageNumber = 1, int pageSize = 10)
@@ -71,6 +75,14 @@ namespace ITPortal.Presentation.Controllers
         public async Task<IActionResult> GetTicketAssignmentHistoryByTicketId(ulong ticketId)
         {
             var result = await _ticketAssignmentHistoryService.GetTicketAssignmentHistoryByTicketIdAsync(ticketId);
+            return Ok(result);
+        }
+        [HttpPost("{ticketId}/attachments")]
+        public async Task<IActionResult> Upload(ulong ticketId, [FromForm] CreateTicketAttachmentDTO dto)
+        {
+            var result = await _ticketAttachmentService.CreateTicketAttachmentAsyn(
+                ticketId, dto, CurrentUserId!.Value);
+
             return Ok(result);
         }
     }

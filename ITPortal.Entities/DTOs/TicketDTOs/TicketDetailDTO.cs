@@ -1,4 +1,5 @@
 ﻿using ITPortal.Entities.DTOs.MajorIncidentDTOs;
+using ITPortal.Entities.DTOs.TicketAttachmentDTOs;
 using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.DTOs.TicketEventDTOs;
 using ITPortal.Entities.Model;
@@ -86,5 +87,6 @@ namespace ITPortal.Entities.DTOs.TicketDTOs
 
         public List<TicketCommentDTO> Comments { get; set; } = new();
         public List<TicketEventDTO> Events { get; set; } = new();
+        public List<TicketAttachmentMiniDTO> Attachments { get; set; }
     }
 }
