@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ITPortal.Business.Repository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.Model;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ITPortal.Services
@@ -17,12 +19,14 @@ namespace ITPortal.Services
         private readonly ITicketRepository _ticketRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public TicketCommentService(ITicketCommentRepository ticketCommentRepository, ITicketRepository ticketRepository, IUserRepository userRepository, IMapper mapper)
+        private readonly ITicketEventRepository _ticketEventRepository;
+        public TicketCommentService(ITicketCommentRepository ticketCommentRepository, ITicketRepository ticketRepository, IUserRepository userRepository, IMapper mapper, ITicketEventRepository ticketEventRepository)
         {
             _ticketCommentRepository = ticketCommentRepository;
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
             _mapper = mapper;
+            _ticketEventRepository = ticketEventRepository;
         }
 
         public async Task<TicketCommentDTO> CreateTicketCommentAsync(ulong ticketId, CreateCommentDTO createTicketCommentDTO, ulong userId)
@@ -52,7 +56,19 @@ namespace ITPortal.Services
             };
             await _ticketCommentRepository.AddAsync(ticketComment);
             await _ticketCommentRepository.SaveChangesAsync();
+            await _ticketEventRepository.AddAsync(new TicketEvent
+            {
+                TicketId = ticketId,
+                EventType = "Yorum Eklendi",
+                ActorId = userId,
+                PayloadJson = JsonSerializer.Serialize(new
+                {
+                    message = "CommentAdded",
 
+                }),
+                CreatedAt = DateTime.UtcNow
+            });
+            await _ticketEventRepository.SaveChangesAsync();
             var createdComment = await _ticketCommentRepository.GetDetailByIdAsync(ticketComment.Id);
             return _mapper.Map<TicketCommentDTO>(createdComment);
         }

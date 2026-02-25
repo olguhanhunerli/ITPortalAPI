@@ -67,6 +67,9 @@ namespace ITPortalAPI.Extensions
 
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
+            services.AddScoped(typeof(ITicketEventRepository), typeof(TicketEventRepository));
+            services.AddScoped<ITicketEventService, TicketEventService>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
 

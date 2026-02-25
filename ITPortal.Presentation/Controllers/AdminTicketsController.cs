@@ -16,10 +16,12 @@ namespace ITPortal.Presentation.Controllers
     public class AdminTicketsController : BaseApiController
     {
         private readonly ITicketService _ticketService;
+        private readonly ITicketEventService _ticketEventService;
 
-        public AdminTicketsController(ITicketService ticketService)
+        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService)
         {
             _ticketService = ticketService;
+            _ticketEventService = ticketEventService;
         }
         [HttpGet]
         public async Task<IActionResult> GetTicketsPage(int pageNumber = 1, int pageSize = 10)
@@ -49,6 +51,12 @@ namespace ITPortal.Presentation.Controllers
         public async Task<IActionResult> AssignTicket(ulong id, [FromBody] UpdateTicketAssignmentDTO request)
         {
             var result = await _ticketService.UpdateTicketAssignment(id, request, CurrentUserId!.Value);
+            return Ok(result);
+        }
+        [HttpGet("events")]
+        public async Task<IActionResult> GetTicketEvents(int page = 1, int pageSize = 10)
+        {
+            var result = await _ticketEventService.GetTicketEvent(page, pageSize);
             return Ok(result);
         }
     }

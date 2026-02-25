@@ -10,7 +10,7 @@ namespace ITPortal.Entities.DTOs.TicketEventDTOs
     public class TicketEventDTO
     {
         public ulong TicketId { get; set; }
-        public string TicketName { get; set; }
+        public string TicketNumber { get; set; }
         public ulong? ActorId { get; set; }
         public string? ActorName { get; set; }
         public string EventType { get; set; }
