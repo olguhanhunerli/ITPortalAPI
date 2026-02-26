@@ -48,12 +48,13 @@ namespace ITPortal.Services
                     BusinessHoursId = businessHour.Id,
                     DayOfWeek = (BusinessDay)r.DayOfWeek,
                     StartTime = r.StartTime,
-                    EndTime = r.EndTime
+                    EndTime = r.EndTime,
+                    
                 }).ToList();
                 await _ruleRepository.AddRangeAsync(rules);
                 await _ruleRepository.SaveChangesAsync();
             }
-            var  created = await _businessHourRepository.GetBusinessHourByIdAsync(businessHour.Id);
+            var created = await _businessHourRepository.GetBusinessHourByIdAsync(businessHour.Id);
             return _mapper.Map<BusinessHoursDetailDTO>(created);
         }
 
@@ -103,7 +104,7 @@ namespace ITPortal.Services
 
             await _ruleRepository.DeleteByBusinessHoursIdAsync(id);
 
-            if(!businessHourUpdateDTO.Is24x7)
+            if (!businessHourUpdateDTO.Is24x7)
             {
                 var rules = businessHourUpdateDTO.Rules.Select(r => new BusinessHoursRule
                 {
@@ -138,7 +139,7 @@ namespace ITPortal.Services
 
                     if ((int)r.DayOfWeek > 6)
                         throw new Exception("DayOfWeek 0-6 aralığında olmalıdır.");
-                    
+
                 }
 
                 foreach (var grp in dto.Rules.GroupBy(x => x.DayOfWeek))
@@ -152,4 +153,5 @@ namespace ITPortal.Services
                 }
             }
         }
+    }
 }

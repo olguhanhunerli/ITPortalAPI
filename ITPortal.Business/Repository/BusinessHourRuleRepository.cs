@@ -1,4 +1,5 @@
-﻿using ITPortal.Business.Repository.GenericRepository;
+﻿using ITPortal.Business.Context;
+using ITPortal.Business.Repository.GenericRepository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.Model;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,7 @@ namespace ITPortal.Business.Repository
 {
     public class BusinessHourRuleRepository : GenericRepository<BusinessHoursRule, ulong>, IBusinessHourRuleRepository
     {
-        public BusinessHourRuleRepository(DbContext context, IHttpContextAccessor http) : base(context, http)
+        public BusinessHourRuleRepository(AppDbContext context, IHttpContextAccessor http) : base(context, http)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITPortal.Entities.DTOs.BusinessHoursRuleDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

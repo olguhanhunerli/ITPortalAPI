@@ -1,10 +1,29 @@
+using ITPortal.Entities;
+using ITPortalAPI.Exceptions;
 using ITPortalAPI.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationService(builder.Configuration);
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ApiResponseWrapperFilter>();
+}).ConfigureApiBehaviorOptions(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+            );
+
+        return new BadRequestObjectResult(ApiResponse<object>.Fail("Validation error", errors));
+    };
+})
     .AddApplicationPart(typeof(ITPortal.Presentation.AssemblyReference).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization(options =>
@@ -49,7 +68,7 @@ app.UseSwaggerUI();
 
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

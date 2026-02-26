@@ -17,7 +17,6 @@ namespace ITPortal.Entities.Model
         public TimeSpan StartTime { get; set; }
 
         public TimeSpan EndTime { get; set; }
-
         public BusinessHours BusinessHours { get; set; } = null!;
     }
     public enum BusinessDay : byte

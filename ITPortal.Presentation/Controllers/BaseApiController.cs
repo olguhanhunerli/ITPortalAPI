@@ -1,4 +1,5 @@
-﻿using ITPortal.Entities.Model;
+﻿using ITPortal.Entities;
+using ITPortal.Entities.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -56,5 +57,14 @@ namespace ITPortal.Presentation.Controllers
 
         protected IActionResult UnauthorizedMsg(string message = "Unauthorized") =>
             StatusCode(StatusCodes.Status401Unauthorized, new { message });
+        protected IActionResult Success<T>(T data, string message = "")
+        {
+            return Ok(new ApiResponse<T>
+            {
+                Success = true,
+                Message = message,
+                Data = data
+            });
+        }
     }
 }

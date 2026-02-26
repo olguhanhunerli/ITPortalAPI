@@ -33,7 +33,7 @@ namespace ITPortal.Business.EntityConfigurations
             b.HasIndex(x => new { x.HolidayDate, x.LocationId })
                 .IsUnique();
 
-            b.HasIndex(x => x.LocationId)
+            b.HasIndex(x => x.LocationId);
 
             b.HasOne(x => x.Location)
                 .WithMany(l => l.Holidays)
