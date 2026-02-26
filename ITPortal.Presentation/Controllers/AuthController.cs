@@ -1,5 +1,6 @@
 ﻿using ITPortal.Entities.DTOs.AuthDTOs;
 using ITPortal.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace ITPortal.Presentation.Controllers
         {
             _authService = authService;
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
@@ -26,6 +28,7 @@ namespace ITPortal.Presentation.Controllers
             var tokens = await _authService.LoginAsync(loginRequest, ua, ip);
             return Ok(tokens);
         }
+        [AllowAnonymous]
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO refreshRequest)
         {

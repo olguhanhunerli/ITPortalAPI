@@ -7,6 +7,12 @@ builder.Services.AddApplicationService(builder.Configuration);
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(ITPortal.Presentation.AssemblyReference).Assembly);
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "DMS API", Version = "v1" });
