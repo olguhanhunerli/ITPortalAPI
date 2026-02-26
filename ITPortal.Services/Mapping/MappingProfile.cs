@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ITPortal.Entities.DTOs.BusinessHourDTOs;
+using ITPortal.Entities.DTOs.BusinessHoursRuleDTOs;
 using ITPortal.Entities.DTOs.ConfigurationItemDTOs;
 using ITPortal.Entities.DTOs.DepartmentDTOs;
 using ITPortal.Entities.DTOs.LocationDTOs;
@@ -151,6 +153,31 @@ namespace ITPortal.Services.Mapping
                 .ForMember(d => d.ChangedByName, opt => opt.MapFrom(s => s.ChangedBy != null ? s.ChangedBy.FullName : null))
                 .ForMember(d => d.ChangeTypeName, opt => opt.MapFrom(s => s.ChangeType != null ? s.ChangeType.NameTr : null)).ReverseMap();
             CreateMap<TicketAttachment, TicketAttachmentMiniDTO>();
+
+            CreateMap<BusinessHours, BusinessHoursMiniDTO>();
+            CreateMap<BusinessHours, BusinessHoursLookupDTO>();
+            CreateMap<BusinessHours, BusinessHoursDetailDTO>()
+                .ForMember(d => d.Rules, opt => opt.MapFrom(s => s.Rules));
+            CreateMap<CreateBusinessHoursDTO, BusinessHours>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(d => d.SlaPolicies, opt => opt.Ignore())
+                .ForMember(d => d.Rules, opt => opt.Ignore());
+            CreateMap<UpdateBusinessHoursDTO, BusinessHours>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.CreatedAt, opt => opt.Ignore())
+                .ForMember(d => d.SlaPolicies, opt => opt.Ignore())
+                .ForMember(d => d.Rules, opt => opt.Ignore());
+            CreateMap<BusinessHoursRule, BusinessHoursRuleDTO>();
+            CreateMap<CreateBusinessHoursRuleDTO, BusinessHoursRule>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.BusinessHoursId, opt => opt.Ignore())
+                .ForMember(d => d.BusinessHours, opt => opt.Ignore());
+            CreateMap<UpdateBusinessHoursRuleDTO, BusinessHoursRule>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.BusinessHoursId, opt => opt.Ignore())
+                .ForMember(d => d.BusinessHours, opt => opt.Ignore())
+                .ForMember(d => d.DayOfWeek, opt => opt.Ignore());
 
         }
     }
