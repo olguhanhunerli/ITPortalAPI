@@ -1,4 +1,5 @@
 ﻿using ITPortal.Entities.DTOs.TicketAttachmentDTOs;
+using ITPortal.Entities.DTOs.TicketCommentDTOs;
 using ITPortal.Entities.DTOs.TicketDTOs;
 using ITPortal.Presentation.Authorization;
 using ITPortal.Services;
@@ -16,12 +17,14 @@ namespace ITPortal.Presentation.Controllers
         private readonly ITicketEventService _ticketEventService;
         private readonly ITicketAssignmentHistoryService _ticketAssignmentHistoryService;
         private readonly ITicketAttachmentService _ticketAttachmentService;
-        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService, ITicketAssignmentHistoryService ticketAssignmentHistoryService, ITicketAttachmentService ticketAttachmentService)
+        private readonly ITicketCommentService _ticketCommentService;
+        public AdminTicketsController(ITicketService ticketService, ITicketEventService ticketEventService, ITicketAssignmentHistoryService ticketAssignmentHistoryService, ITicketAttachmentService ticketAttachmentService, ITicketCommentService ticketCommentService)
         {
             _ticketService = ticketService;
             _ticketEventService = ticketEventService;
             _ticketAssignmentHistoryService = ticketAssignmentHistoryService;
             _ticketAttachmentService = ticketAttachmentService;
+            _ticketCommentService = ticketCommentService;
         }
         [HttpGet]
         public async Task<IActionResult> GetTicketsPage(int pageNumber = 1, int pageSize = 10)
@@ -86,12 +89,43 @@ namespace ITPortal.Presentation.Controllers
             return Ok(result);
         }
         [HttpGet("{ticketId}/attachments/{attachmentId}/download")]
-        public async Task<IActionResult> Download( ulong ticketId,ulong attachmentId)
+        public async Task<IActionResult> Download(ulong ticketId, ulong attachmentId)
         {
             var result = await _ticketAttachmentService
                 .DownloadTicketAttachmentAsync(ticketId, attachmentId);
 
             return File(result.Content, result.ContentType, result.FileName);
+        }
+        [HttpPost("{ticketId}/comment")]
+        public async Task<IActionResult> AddComment(ulong ticketId, CreateCommentDTO dTO)
+        {
+            var result = await _ticketCommentService.CreateTicketCommentAsync(ticketId, dTO, CurrentUserId!.Value);
+            return Ok(result);
+        }
+        [HttpPut("{ticketId}/status")]
+        public async Task<IActionResult> UpdateStatus(ulong ticketId, UpdateStatuTicketDTO dTO)
+        {
+            var result = await _ticketService.UpdateTicketStatusAsync(ticketId, dTO, CurrentUserId!.Value);
+            return Ok(result);
+
+        }
+        [HttpPut("{ticketId}/reopened")]
+        public async Task<IActionResult> ReopenTicket(ulong ticketId)
+        {
+            var result = await _ticketService.ReopenTicketByIdAsync(ticketId, CurrentUserId!.Value);
+            return Ok(result);
+        }
+        [HttpPut("{ticketId}/resolve")]
+        public async Task<IActionResult> ResolveTicket(ulong ticketId, TicketResolveDTO dto)
+        {
+            var result = await _ticketService.UpdateTicketResolveAsync(ticketId, dto, CurrentUserId!.Value);
+            return Ok(result);
+        }
+        [HttpPut("{ticketId}/closed")]
+        public async Task<IActionResult> ClosedTicket(ulong ticketId, string? comment)
+        {
+            var result = await _ticketService.ClosedTicketByIdAsync(ticketId, CurrentUserId!.Value, comment);
+            return Ok(result);
         }
     }
 }

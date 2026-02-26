@@ -105,6 +105,7 @@ namespace ITPortal.Business.EntityConfigurations
                 .WithOne(e => e.Ticket)
                 .HasForeignKey(e => e.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
+           
 
             b.Property(x => x.CreatedAt).IsRequired();
             b.Property(x => x.UpdatedAt).IsRequired();

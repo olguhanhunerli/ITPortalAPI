@@ -65,9 +65,9 @@ namespace ITPortal.Presentation.Controllers
         [HttpPut]
         [Route("{ticketId}/reopen")]
         [Authorize(Roles = RoleGroups.PortalUsers)]
-        public async Task<IActionResult> ReopenTicket(ulong ticketId, [FromForm] UpdateStatuTicketDTO dto)
+        public async Task<IActionResult> ReopenTicket(ulong ticketId)
         {
-            var result = await _ticketService.ReopenTicketByIdAsync(ticketId, CurrentUserId!.Value, dto);
+            var result = await _ticketService.ReopenTicketByIdAsync(ticketId, CurrentUserId!.Value);
             return Ok(result);
         }
         [HttpPost("{ticketId}/attachments")]

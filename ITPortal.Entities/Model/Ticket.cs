@@ -68,9 +68,11 @@ namespace ITPortal.Entities.Model
         public Lookup? Urgency { get; set; }
         public Lookup? ApprovalState { get; set; }
         public MajorIncident? MajorIncident { get; set; }
+        public TicketSlaRun? SlaRun { get; set; }
 
         public ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>();
         public ICollection<TicketEvent> Events { get; set; } = new List<TicketEvent>();
         public ICollection<TicketAttachment> Attachments { get; set; } = new List<TicketAttachment>();
+        public ICollection<TicketSlaPause> SlaPauses { get; set; } = new List<TicketSlaPause>();
     }
 }

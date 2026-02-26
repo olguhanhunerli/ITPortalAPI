@@ -27,6 +27,12 @@ namespace ITPortal.Business.Context
         public DbSet<ConfigurationItem> ConfigurationItems  => Set<ConfigurationItem>();
         public DbSet<TicketAssignmentHistory> TicketAssignmentHistory => Set<TicketAssignmentHistory>();
         public DbSet<TicketAttachment> TicketAttachments => Set<TicketAttachment>();
+        public DbSet<SlaPolicy> SlaPolicies => Set<SlaPolicy>();
+        public DbSet<BusinessHours> BusinessHours => Set<BusinessHours>();
+        public DbSet<BusinessHoursRule> BusinessHoursRules => Set<BusinessHoursRule>();
+        public DbSet<TicketSlaRun> TicketSlaRuns => Set<TicketSlaRun>();
+        public DbSet<TicketSlaPause> TicketSlaPauses => Set<TicketSlaPause>();
+        public DbSet<Holiday> Holidays => Set<Holiday>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

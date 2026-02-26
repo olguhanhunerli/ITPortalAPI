@@ -20,5 +20,6 @@ namespace ITPortal.Entities.Model
         public DateTime CreatedAt { get; set; }
 
         public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<Holiday> Holidays { get; set; } = new List<Holiday>();
     }
 }

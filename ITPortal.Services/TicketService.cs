@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ITPortal.Business.Repository;
 using ITPortal.Business.Repository.Interfaces;
 using ITPortal.Entities.DTOs.TicketDTOs;
 using ITPortal.Entities.Model;
@@ -10,7 +11,7 @@ namespace ITPortal.Services
 {
     public class TicketService : ITicketService
     {
-        private readonly IUserRepository _userRepository; 
+        private readonly IUserRepository _userRepository;
         private readonly ITicketCategoryRepository _ticketCategoryRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IMapper _mapper;
@@ -19,7 +20,8 @@ namespace ITPortal.Services
         private readonly IConfigurationItemsRepository _configurationItemsRepository;
         private readonly ITicketEventRepository _ticketEventRepository;
         private readonly ITicketAssignmentHistoryRepository _ticketAssignmentHistoryRepository;
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository, IConfigurationItemsRepository configurationItemsRepository, ITicketEventRepository ticketEventRepository, ITicketAssignmentHistoryRepository ticketAssignmentHistoryRepository)
+        private readonly ITicketCommentRepository _ticketCommentRepository;
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IUserRepository userRepository, ITicketCategoryRepository ticketCategoryRepository, ILookupRepository lookupRepository, ITeamRepository teamRepository, IConfigurationItemsRepository configurationItemsRepository, ITicketEventRepository ticketEventRepository, ITicketAssignmentHistoryRepository ticketAssignmentHistoryRepository, ITicketCommentRepository ticketCommentRepository)
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
@@ -30,10 +32,12 @@ namespace ITPortal.Services
             _configurationItemsRepository = configurationItemsRepository;
             _ticketEventRepository = ticketEventRepository;
             _ticketAssignmentHistoryRepository = ticketAssignmentHistoryRepository;
+            _ticketCommentRepository = ticketCommentRepository;
         }
 
         public async Task<TicketDetailDTO> ComplateTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
         {
+            var now = DateTime.UtcNow;
             var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
             if (ticket == null) throw new Exception("Ticket bulunamadı");
 
@@ -48,8 +52,8 @@ namespace ITPortal.Services
             if (ticket.StatusId == resolved.Id)
                 throw new Exception("Ticket zaten tamamlanmış");
 
-            var now = DateTime.UtcNow;
-          
+            var fromStatusId = ticket.StatusId;
+
             ticket.StatusId = dto.StatusId;
             ticket.ResolvedAt ??= now;
             ticket.UpdatedAt = now;
@@ -57,11 +61,13 @@ namespace ITPortal.Services
             _ticketRepository.Update(ticket);
             await _ticketRepository.SaveChangesAsync();
 
-            var updatedTicket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket.StatusId == 13UL)
+            {
+                ticket.ClosedAt = now;
+                _ticketRepository.Update(ticket);
+                await _ticketRepository.SaveChangesAsync();
+            }
 
-            if (updatedTicket.StatusId == 13)
-                ticket.ClosedAt = DateTime.UtcNow;
-            _ticketRepository.Update(updatedTicket);
             await _ticketEventRepository.AddAsync(new TicketEvent
             {
                 TicketId = ticket.Id,
@@ -70,12 +76,14 @@ namespace ITPortal.Services
                 PayloadJson = JsonSerializer.Serialize(new
                 {
                     message = "StatusChanged",
-                   
+                    fromStatusId,
+                    toStatusId = ticket.StatusId
                 }),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = now
             });
-            await _ticketRepository.SaveChangesAsync();
-            return _mapper.Map<TicketDetailDTO>(updatedTicket);
+            await _ticketEventRepository.SaveChangesAsync();
+
+            return _mapper.Map<TicketDetailDTO>(ticket);
         }
 
         public async Task<TicketDetailDTO> CreateTicketAsync(CreateTicketDTO dto, ulong requesterId)
@@ -143,7 +151,7 @@ namespace ITPortal.Services
             };
             await _ticketRepository.AddAsync(ticket);
             await _ticketRepository.SaveChangesAsync();
-            
+
             var ticketNumber = await _ticketRepository.GenerateTicketNumberAsync(ticket.Id);
             ticket.TicketNumber = ticketNumber;
             await _ticketRepository.SaveChangesAsync();
@@ -151,12 +159,15 @@ namespace ITPortal.Services
             await _ticketEventRepository.AddAsync(new TicketEvent
             {
                 TicketId = ticket.Id,
-                EventType = "Ticket Oluşturuldu.",
+                EventType = "TicketCreated",
                 ActorId = requesterId,
                 PayloadJson = JsonSerializer.Serialize(new
                 {
-                    message = "Ticket Created",
-
+                    message = "TicketCreated",
+                    ticketNumber = ticket.TicketNumber,
+                    typeId = ticket.TypeId,
+                    priorityId = ticket.PriorityId,
+                    assignedTeamId = ticket.AssignedTeamId
                 }),
                 CreatedAt = DateTime.UtcNow
             });
@@ -167,13 +178,13 @@ namespace ITPortal.Services
 
         public async Task<TicketDetailDTO?> GetMyTicketByIdAsync(ulong userId, ulong ticketId)
         {
-            var entity = await _ticketRepository.GetMyTicketByIdAsync(userId,ticketId);
+            var entity = await _ticketRepository.GetMyTicketByIdAsync(userId, ticketId);
             return _mapper.Map<TicketDetailDTO>(entity);
         }
 
         public async Task<PagedResultDTO<TicketMiniDTO>> GetMyTicketsPageAsync(ulong userId, int pageNumber, int pageSize)
         {
-            var entity = await _ticketRepository.GetMyTicketsPageAsync(userId,pageNumber, pageSize);
+            var entity = await _ticketRepository.GetMyTicketsPageAsync(userId, pageNumber, pageSize);
 
             return new PagedResultDTO<TicketMiniDTO>
             {
@@ -204,7 +215,7 @@ namespace ITPortal.Services
             };
         }
 
-        public async Task<TicketDetailDTO> ReopenTicketByIdAsync(ulong ticketId, ulong userId, UpdateStatuTicketDTO dto)
+        public async Task<TicketDetailDTO> ReopenTicketByIdAsync(ulong ticketId, ulong userId)
         {
             var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
             if (ticket == null) throw new Exception("Ticket bulunamadı");
@@ -223,7 +234,9 @@ namespace ITPortal.Services
             var reopened = statuses.FirstOrDefault(x => x.Code == "Reopened");
             if (reopened == null) throw new Exception("Reopened statüsü bulunamadı");
 
-            ticket.StatusId = dto.StatusId;
+            var fromStatusId = ticket.StatusId;
+
+            ticket.StatusId = reopened.Id; 
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.ClosedAt = null;
             ticket.ResolvedAt = null;
@@ -231,15 +244,18 @@ namespace ITPortal.Services
 
             _ticketRepository.Update(ticket);
             await _ticketRepository.SaveChangesAsync();
+
             await _ticketEventRepository.AddAsync(new TicketEvent
             {
                 TicketId = ticket.Id,
-                EventType = "Ticket Yeniden Açıldı.",
+                EventType = "StatusChanged",
                 ActorId = userId,
                 PayloadJson = JsonSerializer.Serialize(new
                 {
-                    message = "Ticket Reopen",
-
+                    message = "StatusChanged",
+                    fromStatusId,
+                    toStatusId = reopened.Id,
+                    reopenedCount = ticket.ReopenedCount
                 }),
                 CreatedAt = DateTime.UtcNow
             });
@@ -298,6 +314,176 @@ namespace ITPortal.Services
             await _ticketAssignmentHistoryRepository.SaveChangesAsync();
             var updated = await _ticketRepository.GetByTicketIdAsync(ticketId);
             return _mapper.Map<TicketDetailDTO>(updated);
+        }
+
+        public async Task<TicketDetailDTO> UpdateTicketStatusAsync(ulong ticketId, UpdateStatuTicketDTO dto, ulong userId)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null) { throw new Exception("Ticket bulunamadı"); }
+            if (dto == null)
+            {
+                throw new Exception("Güncelleme bilgileri sağlanmadı");
+            }
+            var fromStatusId = ticket.StatusId;
+            ticket.StatusId = dto.StatusId;
+            ticket.UpdatedAt = DateTime.UtcNow;
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+
+            await _ticketEventRepository.AddAsync(new TicketEvent
+            {
+                TicketId = ticket.Id,
+                EventType = "StatusChanged",
+                ActorId = userId,
+                PayloadJson = JsonSerializer.Serialize(new
+                {
+                    message = "StatusChanged",
+                    fromStatusId,
+                    toStatusId = dto.StatusId
+                }),
+                CreatedAt = DateTime.UtcNow
+            });
+            await _ticketEventRepository.SaveChangesAsync();
+            var updated = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            return _mapper.Map<TicketDetailDTO>(updated);
+        }
+
+        public async Task<TicketDetailDTO> UpdateTicketResolveAsync(ulong ticketId, TicketResolveDTO dto, ulong userId)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null) throw new Exception("Ticket bulunamadı");
+
+            var statuses = await _lookupRepository.GetLookupsByTypeCodeAsync("TicketStatus", null, 200);
+
+            var resolvedStatus = statuses.FirstOrDefault(x => x.Code == "Resolved");
+            if (resolvedStatus == null) throw new Exception("Resolved statüsü bulunamadı");
+
+            if (ticket.StatusId == resolvedStatus.Id)
+                throw new Exception("Ticket zaten resolved durumda.");
+
+            var closedStatus = statuses.FirstOrDefault(x => x.Code == "Closed");
+            if (closedStatus != null && ticket.StatusId == closedStatus.Id)
+                throw new Exception("Closed ticket resolve edilemez.");
+
+            var fromStatusId = ticket.StatusId;
+
+            var now = DateTime.UtcNow;
+            ticket.StatusId = resolvedStatus.Id;
+            ticket.ResolvedAt = now;
+            ticket.ClosedAt = null;
+            ticket.UpdatedAt = now;
+
+            if (!string.IsNullOrWhiteSpace(dto.RootCause))
+                ticket.RootCause = dto.RootCause;
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+            await _ticketEventRepository.AddAsync(new TicketEvent
+            {
+                TicketId = ticket.Id,
+                ActorId = userId,
+                EventType = "StatusChanged",
+                PayloadJson = JsonSerializer.Serialize(new
+                {
+                    message = "StatusChanged",
+                    fromStatusId,
+                    toStatusId = resolvedStatus.Id
+                }),
+                CreatedAt = now
+            });
+            await _ticketEventRepository.SaveChangesAsync();
+
+            if (!string.IsNullOrWhiteSpace(dto.ResolutionComment))
+            {
+                var visibilityId = dto.IsPublicComment ? 37UL : 38UL;
+
+                await _ticketCommentRepository.AddAsync(new TicketComment
+                {
+                    TicketId = ticket.Id,
+                    AuthorId = userId,
+                    Body = dto.ResolutionComment,
+                    VisibilityId = visibilityId,
+                    CreatedAt = now
+                });
+                await _ticketCommentRepository.SaveChangesAsync();
+
+                await _ticketEventRepository.AddAsync(new TicketEvent
+                {
+                    TicketId = ticket.Id,
+                    ActorId = userId,
+                    EventType = "CommentAdded",
+                    PayloadJson = JsonSerializer.Serialize(new
+                    {
+                        message = "CommentAdded",
+                        isPublic = dto.IsPublicComment,
+                        kind = "Resolution"
+                    }),
+                    CreatedAt = now
+                });
+                await _ticketEventRepository.SaveChangesAsync();
+            }
+            return _mapper.Map<TicketDetailDTO>(ticket);
+        }
+
+        public async Task<TicketDetailDTO> ClosedTicketByIdAsync(ulong ticketId, ulong userId, string? comment)
+        {
+            var ticket = await _ticketRepository.GetByTicketIdAsync(ticketId);
+            if (ticket == null)
+                throw new Exception("Ticket bulunamadı");
+
+            var statuses = await _lookupRepository
+                .GetLookupsByTypeCodeAsync("TicketStatus", null, 200);
+
+            var resolved = statuses.FirstOrDefault(x => x.Code == "Resolved");
+            var closed = statuses.FirstOrDefault(x => x.Code == "Closed");
+
+            if (resolved == null || closed == null)
+                throw new Exception("Gerekli statüler bulunamadı");
+
+            if (ticket.StatusId != resolved.Id)
+                throw new Exception("Sadece Resolved durumundaki ticket kapatılabilir");
+
+            var now = DateTime.UtcNow;
+
+            var fromStatusId = ticket.StatusId;
+
+            ticket.StatusId = closed.Id;
+            ticket.ClosedAt = now;
+            ticket.UpdatedAt = now;
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChangesAsync();
+
+            if (!string.IsNullOrWhiteSpace(comment))
+            {
+                await _ticketCommentRepository.AddAsync(new TicketComment
+                {
+                    TicketId = ticket.Id,
+                    AuthorId = userId,
+                    Body = comment,
+                    VisibilityId = 37, // Public
+                    CreatedAt = now
+                });
+                await _ticketCommentRepository.SaveChangesAsync();
+            }
+
+            await _ticketEventRepository.AddAsync(new TicketEvent
+            {
+                TicketId = ticket.Id,
+                ActorId = userId,
+                EventType = "StatusChanged",
+                PayloadJson = JsonSerializer.Serialize(new
+                {
+                    fromStatusId,
+                    toStatusId = closed.Id,
+                    message = "TicketClosed"
+                }),
+                CreatedAt = now
+            });
+
+            await _ticketEventRepository.SaveChangesAsync();
+
+            return _mapper.Map<TicketDetailDTO>(ticket);
         }
     }
 }

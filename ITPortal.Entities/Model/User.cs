@@ -58,5 +58,6 @@ namespace ITPortal.Entities.Model
         public Team? Team { get; set; }
         public Location? Location { get; set; }
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public ICollection<TicketSlaPause> CreatedTicketSlaPauses { get; set; } = new List<TicketSlaPause>();
     }
 }
