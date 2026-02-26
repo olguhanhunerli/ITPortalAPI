@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITPortal.Entities.DTOs.BusinessHoursRuleDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace ITPortal.Entities.DTOs.BusinessHourDTOs
         public string Name { get; set; } = null!;
         public string TimeZone { get; set; } = "Europe/Istanbul";
         public bool Is24x7 { get; set; } = false;
+
+        public List<BusinessHoursRuleDTO> Rules { get; set; }
     }
 }

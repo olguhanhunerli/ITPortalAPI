@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace ITPortal.Entities.DTOs.BusinessHourDTOs
 {
-    public class UpdateBusinessHoursDTO
+    public class UpdateBusinessHoursDTO: CreateBusinessHoursDTO
     {
-        public string Name { get; set; } = null!;
-        public string TimeZone { get; set; } = null!;
-        public bool Is24x7 { get; set; }
+      
     }
 }

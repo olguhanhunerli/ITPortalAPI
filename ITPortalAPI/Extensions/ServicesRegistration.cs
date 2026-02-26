@@ -76,6 +76,10 @@ namespace ITPortalAPI.Extensions
             services.AddScoped(typeof(ITicketAttachmentRepository), typeof(TicketAttachmentRepository));
             services.AddScoped<ITicketAttachmentService, TicketAttachmentService>();
 
+            services.AddScoped(typeof(IBusinessHourRepository), typeof(IBusinessHourRepository));
+            services.AddScoped<IBusinessHourService, BusinessHourService>();
+            services.AddScoped(typeof(IBusinessHourRuleRepository), typeof(BusinessHourRuleRepository));
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
 
