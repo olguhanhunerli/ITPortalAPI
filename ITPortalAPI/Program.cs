@@ -7,6 +7,18 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationService(builder.Configuration);
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowNextApp", policy =>
+//    {
+//        policy
+//            .WithOrigins("http://localhost:3000")
+//            .AllowAnyHeader()
+//            .AllowAnyMethod()
+//            .AllowCredentials();
+//    });
+//});
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ApiResponseWrapperFilter>();
@@ -69,6 +81,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors("AllowNextApp");
 app.UseAuthentication();
 app.UseAuthorization();
 
