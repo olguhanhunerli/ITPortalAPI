@@ -120,6 +120,31 @@ namespace ITPortalAPI.Extensions
                     NameClaimType = JwtRegisteredClaimNames.Sub,
                     RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["accessToken"];
+                        Console.WriteLine("COOKIE TOKEN: " + (string.IsNullOrEmpty(token) ? "NULL" : "VAR"));
+
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("AUTH FAILED: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        Console.WriteLine("AUTH CHALLENGE");
+                        return Task.CompletedTask;
+                    }
+                };
             });
             return services;
 

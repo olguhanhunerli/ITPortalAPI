@@ -7,17 +7,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationService(builder.Configuration);
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowNextApp", policy =>
-//    {
-//        policy
-//            .WithOrigins("http://localhost:3000")
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//            .AllowCredentials();
-//    });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNextApp", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddControllers(options =>
 {
@@ -46,7 +46,7 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "DMS API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IT Portal API", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

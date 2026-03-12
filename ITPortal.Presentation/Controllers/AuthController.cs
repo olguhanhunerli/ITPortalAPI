@@ -1,6 +1,7 @@
 ﻿using ITPortal.Entities.DTOs.AuthDTOs;
 using ITPortal.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,38 @@ namespace ITPortal.Presentation.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
+            Console.WriteLine("LOGIN ACTION START");
+
             var ua = Request.Headers["User-Agent"].ToString();
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             var tokens = await _authService.LoginAsync(loginRequest, ua, ip);
-            return Ok(tokens);
+
+            Console.WriteLine("TOKENS OBJECT: " + System.Text.Json.JsonSerializer.Serialize(tokens));
+
+            Response.Cookies.Append("accessToken", tokens.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                Path = "/"
+            });
+
+            Console.WriteLine("ACCESS TOKEN COOKIE APPENDED");
+
+            Response.Cookies.Append("refreshToken", tokens.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/"
+            });
+
+            Console.WriteLine("REFRESH TOKEN COOKIE APPENDED");
+
+            return Ok(new { success = true });
         }
         [AllowAnonymous]
         [HttpPost("refresh")]
